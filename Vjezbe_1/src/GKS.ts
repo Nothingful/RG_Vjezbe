@@ -92,6 +92,19 @@
         this.PY = -this.SY * this.ymax;
     }
 
+    /** Draw a standard centered coordinate system */
+    public drawCoordinateSystem(): void{
+        // DRAW X AXIS LINE
+        this.moveTo(0, this.xmax);
+        this.lineTo(0, this.xmin);
+        this.stroke();
+
+        // DRAW Y AXIS LINE
+        this.moveTo(this.ymax, 0);
+        this.lineTo(this.ymin, 0);
+        this.stroke();
+    }
+
     /** Return pixel value for X */
     private scaleX(X: number){
         return this.SX * X + this.PX;
