@@ -14,13 +14,12 @@ function vjezba_3(): void{
 
    gks.drawCoordinateSystem();
 
-   // DRAW PARABOLA
+   // DRAW SINE FUNCTION
    const MOVE = 0.01;
    gks.strokeStyle("red");
    gks.moveTo(0, Math.sin(0));
    for (let X = 0; X < 2*Math.PI; X += MOVE) {
       let Y = Math.sin(X);
-      //od 0 do 2*Math.PI
       gks.lineTo(X,Y);
    }
    gks.stroke();
