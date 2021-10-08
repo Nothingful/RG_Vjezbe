@@ -1,6 +1,7 @@
 class GKS {
     /** HTML canvas element */
     private canvas: HTMLCanvasElement;
+    /** HTML canvas rendering context */
     private context: CanvasRenderingContext2D;
     private xmin: number;
     private xmax: number;

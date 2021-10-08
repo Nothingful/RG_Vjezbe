@@ -1,17 +1,20 @@
 
-function zadatak_1(): void{
+function zadatak_1(x: number, y:number): void{
    var canvas: HTMLCanvasElement = document.querySelector("#canvas");
 
    if (!canvas){
       alert("No canvas found!");
    }
 
-   const DIST_X = 30;
-   const DIST_Y = DIST_X;
+   const DIST_X = x;
+   const DIST_Y = y;
 
    var height: number = canvas.height;
    var width: number = canvas.width;
    var g: CanvasRenderingContext2D = canvas.getContext("2d");
+
+   // CLEAR CANVAS
+   g.clearRect(0, 0, width, height);
 
    // DRAW X LINES
    for (let index = 0; index < width; index++) {
@@ -31,5 +34,5 @@ function zadatak_1(): void{
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-   zadatak_1();
+   zadatak_1(30, 30);
 });

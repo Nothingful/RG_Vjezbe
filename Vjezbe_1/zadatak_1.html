@@ -8,6 +8,18 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='dist/zadatak_1.js'></script>
+    <script>
+        $(document).ready(function() {
+            $("#x_range").on("change", function() {
+                $("#x_range_value").html(this.valueAsNumber);
+                zadatak_1(this.valueAsNumber, $("#y_range")[0].valueAsNumber);
+            });
+            $("#y_range").on("change", function() {
+                $("#y_range_value").html(this.valueAsNumber);
+                zadatak_1($("#x_range")[0].valueAsNumber, this.valueAsNumber);
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Zadatak 1</h1>
@@ -16,11 +28,13 @@
     </div>
     <div class="slidecontainer">
         X
-        <input type="range" min="10" max="200" value="40" class="slider" id="x_range">
+        <input type="range" min="10" max="200" value="30" class="slider" id="x_range">
+        <span id="x_range_value">30</span>
     </div>
     <div class="slidecontainer">
         Y
-        <input type="range" min="10" max="200" value="40" class="slider" id="y_range">
+        <input type="range" min="10" max="200" value="30" class="slider" id="y_range">
+        <span id="y_range_value">30</span>
     </div>
 </body>
 </html>
