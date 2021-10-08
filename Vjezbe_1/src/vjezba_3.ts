@@ -5,10 +5,10 @@ function vjezba_3(): void{
       alert("No canvas found!");
    }
 
-   const X_MIN = -7;
-   const X_MAX = 7;
-   const Y_MIN = X_MIN;
-   const Y_MAX = X_MAX;
+   const X_MIN = -2;
+   const X_MAX = 8;
+   const Y_MIN = -3;
+   const Y_MAX = 3;
 
    var gks = new GKS(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
 
