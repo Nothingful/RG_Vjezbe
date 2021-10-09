@@ -3,11 +3,11 @@
  * 
  * Klasa za iscrtavanje na HTML canvasu i
  * konvertiranje matematickih X i Y koordinata na koordinate ekrana
- * @param {HTMLCanvasElement} canvas 
- * @param {number} xmin 
- * @param {number} xmax 
- * @param {number} ymin 
- * @param {number} ymax 
+ * @param {HTMLCanvasElement} canvas - HTML canvas element
+ * @param {number} xmin - minimum system X coordinate
+ * @param {number} xmax - maximum system X coordinate
+ * @param {number} ymin - minimum system Y coordinate
+ * @param {number} ymax - maximum system Y coordinate
  */
  class GKS {
     /** HTML canvas element */
@@ -31,14 +31,26 @@
         this.ymax = ymax;
         this.ymin = ymin;
         this.context = this.canvas.getContext("2d");
-
-        var height: number = this.canvas.height;
-        var width: number = this.canvas.width;
         
-        this.SX = width / (this.xmax - this.xmin);
-        this.SY = -height / (this.ymax - this.ymin);
+        this.SX = this.canvas.width / (this.xmax - this.xmin);
+        this.SY = -this.canvas.height / (this.ymax - this.ymin);
         this.PX = -this.SX * this.xmin;
         this.PY = -this.SY * this.ymax;
+    }
+
+    /** Clear canvas */
+    public clearCanvas(): void {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /** Return pixel value for X */
+    private scaleX(X: number): number {
+        return this.SX * X + this.PX;
+    }
+
+    /** Return pixel value for Y */
+    private scaleY(Y: number): number {
+        return this.SY * Y + this.PY;
     }
 
     /**
@@ -155,20 +167,5 @@
             this.stroke();
         }
         this.strokeStyle("black");
-    }
-
-    /** Clear canvas */
-    public clearCanvas(): void {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    /** Return pixel value for X */
-    private scaleX(X: number): number {
-        return this.SX * X + this.PX;
-    }
-
-    /** Return pixel value for Y */
-    private scaleY(Y: number): number {
-        return this.SY * Y + this.PY;
     }
 }
