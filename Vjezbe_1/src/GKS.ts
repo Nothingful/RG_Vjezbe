@@ -115,7 +115,7 @@
             this.moveTo(X,0);
             this.lineTo(X,0-0.05);
             this.stroke();
-            if (X != 0) this.strokeText(X.toString(),X,-0.2);
+            if (X != 0) this.strokeText(X.toString(),X,-0.3);
         }
 
         // DRAW Y AXIS LINE
@@ -133,6 +133,28 @@
             this.stroke();
             if (Y != 0) this.strokeText(Y.toString(),0.2,Y);
         }
+    }
+
+    /**
+     * Draw geometric flower
+     * @param a - flower outer edge
+     * @param step - flower drawing decrement
+     */
+    public drawFlower(a_max: number, step: number): void {
+        const MOVE = 0.01;
+        this.strokeStyle("red");
+        for (let a = a_max; a > 0; a-=step) {
+            var r = a * Math.sin(0);
+            this.moveTo(r * Math.cos(0), r * Math.sin(0));
+            for (let t = 0; t < 2*Math.PI; t += MOVE) {
+                r = a * Math.sin(4*t);
+                let X = r * Math.cos(t);
+                let Y = r * Math.sin(t);
+                this.lineTo(X,Y);
+            }
+            this.stroke();
+        }
+        this.strokeStyle("black");
     }
 
     /** Clear canvas */
