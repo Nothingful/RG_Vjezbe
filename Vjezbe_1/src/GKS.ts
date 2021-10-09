@@ -135,13 +135,18 @@
         }
     }
 
+    /** Clear canvas */
+    public clearCanvas(): void {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     /** Return pixel value for X */
-    private scaleX(X: number){
+    private scaleX(X: number): number {
         return this.SX * X + this.PX;
     }
 
     /** Return pixel value for Y */
-    private scaleY(Y: number){
+    private scaleY(Y: number): number {
         return this.SY * Y + this.PY;
     }
 }
