@@ -80,14 +80,14 @@
     }
 
     /**
-     * Draws text by calling HTML5 routine stroke()
+     * Draws text by calling HTML5 routine strokeText()
      */
      public strokeText(text: string, X: number, Y: number): void {
         this.context.strokeText(text, this.scaleX(X), this.scaleY(Y));
     }
 
     /**
-     * Set line color (npr. "red", "green", "blue", "black")
+     * Set line color (e.q. "red", "green", "blue", "black")
      * @param {string | CanvasGradient | CanvasPattern} color 
      */
     public strokeStyle(color: string | CanvasGradient | CanvasPattern): void {
