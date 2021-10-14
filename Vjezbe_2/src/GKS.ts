@@ -42,6 +42,7 @@
         this.matrix = MT2D.getIdentityMatrix();
     }
 
+    /** Overrides contructor and creates special GKS for elipsis drawing */
     public static createElipsisGKS(canvas: HTMLCanvasElement, xmin: number, xmax: number): GKS {
         var gks = new GKS(canvas, xmin, xmax, 1, 1);
         return gks;
