@@ -67,7 +67,7 @@
      * Perfoms matrix transformations on X and Y coordinates
      * @param {number} X 
      * @param {number} Y 
-     * @returns {[number, number] } new X and Y values
+     * @returns {[number, number]} new X and Y values
      */
     private matTransform(X: number, Y: number): [number, number] {
         let x_new = this.matrix[0][0]*X + this.matrix[0][1]*Y + this.matrix[0][2];
@@ -141,8 +141,10 @@
         const MOVE = 1;
 
         // DRAW X AXIS LINE
-        this.moveTo(this.xmin, 0);
-        this.lineTo(this.xmax, 0);
+        //this.moveTo(this.xmin, 0);
+        //this.lineTo(this.xmax, 0);
+        this.moveTo(0, this.PY);
+        this.lineTo(this.canvas.width, this.PY);
         this.stroke();
         // DRAW X AXIS POINTS AND NUMBERS
         for (let X = this.xmin; X < this.xmax; X += MOVE) {
@@ -156,8 +158,10 @@
         }
 
         // DRAW Y AXIS LINE
-        this.moveTo(0, this.ymin);
-        this.lineTo(0, this.ymax);
+        //this.moveTo(0, this.ymin);
+        //this.lineTo(0, this.ymax);
+        this.moveTo(this.PX, 0);
+        this.lineTo(this.PX, this.canvas.height);
         this.stroke();
         // DRAW Y AXIS POINTS AND NUMBERS
         for (let Y = this.ymin; Y < this.ymax; Y += MOVE) {

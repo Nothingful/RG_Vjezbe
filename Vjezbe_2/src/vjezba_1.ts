@@ -1,4 +1,4 @@
-function zadaca_1_2(): void{
+function vjezba_2_1(): void{
     var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
  
     if (!canvas){
@@ -12,6 +12,7 @@ function zadaca_1_2(): void{
  
     var mat = new MT2D();
     var gks = new GKS(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
+    gks.trans(mat);
  
     gks.drawCoordinateSystem();
  
@@ -30,5 +31,5 @@ function zadaca_1_2(): void{
  }
  
  document.addEventListener('DOMContentLoaded', function () {
-    zadaca_1_2();
+   vjezba_2_1();
  });
