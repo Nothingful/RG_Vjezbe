@@ -82,7 +82,11 @@ class MT2D {
         this.mult(m);
     }
 
-    /** Apply transformation matrix that mirrors the vectors for y = kx + l line */
+    /**
+     * Apply transformation matrix that mirrors the vectors for y = kx + l line
+     * @param k 
+     * @param l 
+     */
     public mirrorFor(k: number, l: number): void {
         var alpha = Math.atan(k);
         this.translate(0, -l);
@@ -90,6 +94,18 @@ class MT2D {
         this.mirrorForX();
         this.rotate(alpha);
         this.translate(0, l);
+    }
+
+    /**
+     * Rotate around (x0, y0) point for a given angle
+     * @param x0 X coordinate
+     * @param y0 Y coordinate
+     * @param angle angle in radians
+     */
+    public rotate_around_point(x0: number, y0: number, angle: number){
+        this.translate(x0, y0);
+        this.rotate(angle);
+        this.translate(-x0, -y0);
     }
     
     public stretch(alpha: number, beta: number): void {
