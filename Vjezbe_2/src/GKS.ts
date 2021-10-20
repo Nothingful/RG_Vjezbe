@@ -19,12 +19,12 @@
     private ymin: number;
     private ymax: number;
 
-    private SX: number;
-    private SY: number;
-    private PX: number;
-    private PY: number;
+    public SX: number;
+    public SY: number;
+    public PX: number;
+    public PY: number;
 
-    private matrix: number[][];
+    public matrix: number[][];
 
     constructor(canvas: HTMLCanvasElement, xmin: number, xmax: number, ymin: number, ymax: number) {
         this.canvas = canvas;
@@ -36,8 +36,10 @@
         
         this.SX = this.canvas.width / (this.xmax - this.xmin);
         this.SY = -this.canvas.height / (this.ymax - this.ymin);
+        //this.SY = -this.SX;
         this.PX = -this.SX * this.xmin;
         this.PY = -this.SY * this.ymax;
+        //this.PY = this.canvas.height/2;
 
         this.matrix = MT2D.getIdentityMatrix();
     }
@@ -45,6 +47,8 @@
     /** Overrides contructor and creates special GKS for elipsis drawing */
     public static createElipsisGKS(canvas: HTMLCanvasElement, xmin: number, xmax: number): GKS {
         var gks = new GKS(canvas, xmin, xmax, 1, 1);
+        gks.SY = -gks.SX;
+        gks.PY = canvas.height/2;
         return gks;
     }
 
@@ -141,41 +145,39 @@
         const MOVE = 1;
 
         // DRAW X AXIS LINE
-        //this.moveTo(this.xmin, 0);
-        //this.lineTo(this.xmax, 0);
-        this.moveTo(0, this.PY);
-        this.lineTo(this.canvas.width, this.PY);
+        this.moveTo(this.xmin, 0);
+        this.lineTo(this.xmax, 0);
         this.stroke();
         // DRAW X AXIS POINTS AND NUMBERS
         for (let X = this.xmin; X < this.xmax; X += MOVE) {
-            this.moveTo(X,0);
+            this.moveTo(X,0-0.05);
             this.lineTo(X,0+0.05);
             this.stroke();
-            this.moveTo(X,0);
-            this.lineTo(X,0-0.05);
+            /*this.context.moveTo(this.scaleX(X), this.PX/2 - 5);
+            this.context.lineTo(this.scaleX(X), this.PX/2 + 5);*/
+            /*this.moveTo(X, this.PX - 0.5);
+            this.lineTo(X, this.PX + 0.5);*/
             this.stroke();
             if (X != 0) this.strokeText(X.toString(),X,-0.3);
         }
 
         // DRAW Y AXIS LINE
-        //this.moveTo(0, this.ymin);
-        //this.lineTo(0, this.ymax);
-        this.moveTo(this.PX, 0);
-        this.lineTo(this.PX, this.canvas.height);
+        this.moveTo(0, this.ymin);
+        this.lineTo(0, this.ymax);
         this.stroke();
         // DRAW Y AXIS POINTS AND NUMBERS
         for (let Y = this.ymin; Y < this.ymax; Y += MOVE) {
-            let X = 0;
-            this.moveTo(X,Y);
-            this.lineTo(X+0.05,Y);
-            this.stroke();
-            this.moveTo(X,Y);
-            this.lineTo(X-0.05,Y);
+            this.moveTo(0-0.05,Y);
+            this.lineTo(0+0.05,Y);
             this.stroke();
             if (Y != 0) this.strokeText(Y.toString(),0.2,Y);
         }
     }
 
+    /**
+     * Update GKS transformation matrix
+     * @param m MT2D matrix object
+     */
     public trans(m: MT2D) {
         this.matrix = m.matrix;
     }
