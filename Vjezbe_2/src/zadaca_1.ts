@@ -87,33 +87,20 @@ function zadaca_2_1(): void{
   // Blue mirror train
   mat.setIdentityMatrix();
   gks.strokeStyle("blue");
-  var alpha = Math.atan(3);
   mat.translate(1, 2);
-  mat.translate(0, -6);
-  mat.rotate(-alpha);
-  mat.mirrorForX();
-  mat.rotate(alpha);
-  mat.translate(0, 6);
+  mat.mirrorFor(3, 6);
   gks.trans(mat);
   train_body();
 
   mat.setIdentityMatrix();
   mat.translate(2, 2);
-  mat.translate(0, -6);
-  mat.rotate(-alpha);
-  mat.mirrorForX();
-  mat.rotate(alpha);
-  mat.translate(0, 6);
+  mat.mirrorFor(3, 6);
   gks.trans(mat);
   train_wheel();
 
   mat.setIdentityMatrix();
   mat.translate(6, 2);
-  mat.translate(0, -6);
-  mat.rotate(-alpha);
-  mat.mirrorForX();
-  mat.rotate(alpha);
-  mat.translate(0, 6);
+  mat.mirrorFor(3, 6);
   gks.trans(mat);
   train_wheel();
 }

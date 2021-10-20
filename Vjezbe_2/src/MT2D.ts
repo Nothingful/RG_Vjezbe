@@ -81,6 +81,16 @@ class MT2D {
         let m = [[-1,0,0],[0,1,0],[0,0,1]];
         this.mult(m);
     }
+
+    /** Apply transformation matrix that mirrors the vectors for y = kx + l line */
+    public mirrorFor(k: number, l: number): void {
+        var alpha = Math.atan(k);
+        this.translate(0, -l);
+        this.rotate(-alpha);
+        this.mirrorForX();
+        this.rotate(alpha);
+        this.translate(0, l);
+    }
     
     public stretch(alpha: number, beta: number): void {
         let m = [[1,Math.tan(beta),0],[Math.tan(alpha),1,0],[0,0,1]];
