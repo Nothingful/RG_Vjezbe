@@ -5,16 +5,16 @@ function vjezba_3_1(): void{
     alert("No canvas found!");
   }
 
-  const X_MIN = -7;
+  const X_MIN = -9;
   const X_MAX = 10;
-  const Y_MIN = -6;
-  const Y_MAX = 6;
+  const Y_MIN = -9;
+  const Y_MAX = 10;
 
   var mat = new MT2D();
   var gks = new GKS(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
   gks.trans(mat);
 
-  gks.drawCoordinateSystem();
+  //gks.drawCoordinateSystem();
 
   function elipsis(a: number, b: number) {
     const MOVE = 0.01;
@@ -26,15 +26,40 @@ function vjezba_3_1(): void{
     }
     gks.stroke();
   }
-  gks.strokeStyle("red");
-  mat.translate(4,2);
-  gks.trans(mat);
-  elipsis(4, 2);
 
-  gks.strokeStyle("blue");
-  mat.rotate(MT2D.toRad(30));
-  gks.trans(mat);
-  elipsis(4, 2);
+  const STEP = 1;
+  var alpha = 0;
+  function ventilator(){
+    gks.clearCanvas();
+    gks.strokeText("Alpha: "+alpha, -8.5, 9);
+    elipsis(0.2, 0.2);
+    
+    mat.translate(-3.5,0);
+    mat.rotate(MT2D.toRad(alpha));
+    gks.trans(mat);
+    elipsis(4, 0.8);
+    
+    mat.setIdentityMatrix();
+    mat.translate(-3.5,0);
+    mat.rotate(MT2D.toRad(alpha+120));
+    gks.trans(mat);
+    elipsis(4, 0.8);
+    
+    mat.setIdentityMatrix();
+    mat.translate(-3.5,0);
+    mat.rotate(MT2D.toRad(alpha+240));
+    gks.trans(mat);
+    elipsis(4, 0.8);
+    
+    alpha += STEP;
+    if (alpha >= 360) alpha = 0;
+    mat.setIdentityMatrix();
+    gks.trans(mat);
+    requestAnimationFrame(ventilator);
+  }
+
+  gks.strokeStyle("black");
+  ventilator();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
