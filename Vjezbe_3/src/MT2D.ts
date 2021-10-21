@@ -1,5 +1,5 @@
 /**
- * Class for matrix manipulation
+ * Class for 2D matrix manipulation
  */
 class MT2D {
     public matrix: number[][];

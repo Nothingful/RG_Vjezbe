@@ -31,7 +31,8 @@ function vjezba_3_1(): void{
   var alpha = 0;
   function ventilator(){
     gks.clearCanvas();
-    gks.strokeText("Alpha: "+alpha, -8.5, 9);
+    //gks.drawCoordinateSystem();
+    gks.strokeText("Alpha: "+alpha+"°", -8.5, 9);
     elipsis(0.2, 0.2);
     
     mat.translate(-3.5,0);
