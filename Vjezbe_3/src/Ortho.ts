@@ -1,15 +1,13 @@
 /**
- * Globalni Koordinatni Sustav
- * 
- * Klasa za iscrtavanje na HTML canvasu i
- * konvertiranje matematickih X i Y koordinata na koordinate ekrana
+ * Klasa za ortogonalnu projekciju linija
+ * definiranih u 3D globalnom koordinatnom sustavu na xy-ravninu
  * @param {HTMLCanvasElement} canvas - HTML canvas element
  * @param {number} xmin - minimum system X coordinate
  * @param {number} xmax - maximum system X coordinate
  * @param {number} ymin - minimum system Y coordinate
  * @param {number} ymax - maximum system Y coordinate
  */
- class GKS {
+ class Ortho {
     /** HTML canvas element */
     private canvas: HTMLCanvasElement;
     /** HTML canvas rendering context */
@@ -19,10 +17,10 @@
     private ymin: number;
     private ymax: number;
 
-    public SX: number;
-    public SY: number;
-    public PX: number;
-    public PY: number;
+    private SX: number;
+    private SY: number;
+    private PX: number;
+    private PY: number;
 
     public matrix: number[][];
 
@@ -41,15 +39,7 @@
         this.PY = -this.SY * this.ymax;
         //this.PY = this.canvas.height/2;
 
-        this.matrix = MT2D.getIdentityMatrix();
-    }
-
-    /** Overrides contructor and creates special GKS for elipsis drawing */
-    public static createElipsisGKS(canvas: HTMLCanvasElement, xmin: number, xmax: number): GKS {
-        var gks = new GKS(canvas, xmin, xmax, 1, 1);
-        gks.SY = -gks.SX;
-        gks.PY = canvas.height/2;
-        return gks;
+        this.matrix = MT3D.getIdentityMatrix();
     }
 
     /** Clear canvas */
@@ -71,11 +61,12 @@
      * Perfoms matrix transformations on X and Y coordinates
      * @param {number} X 
      * @param {number} Y 
+     * @param {number} Z 
      * @returns {[number, number]} new X and Y values
      */
-    private matTransform(X: number, Y: number): [number, number] {
-        let x_new = this.matrix[0][0]*X + this.matrix[0][1]*Y + this.matrix[0][2];
-        let y_new = this.matrix[1][0]*X + this.matrix[1][1]*Y + this.matrix[1][2];
+    private matTransform(X: number, Y: number, Z: number): [number, number] {
+        let x_new = this.matrix[0][0]*X + this.matrix[0][1]*Y + this.matrix[0][2]*Z + this.matrix[0][3];
+        let y_new = this.matrix[1][0]*X + this.matrix[1][1]*Y + this.matrix[1][2]*Z + this.matrix[1][3];
         return [x_new, y_new];
     }
 
@@ -83,10 +74,11 @@
      * Moves the "pen" to the canvas scaled X and Y coordinates
      * @param {number} X - global X coordinate
      * @param {number} Y - global Y coordinate
+     * @param {number} Z - global Z coordinate
      */
-    public moveTo(X: number, Y: number): void {
+    public moveTo(X: number, Y: number, Z: number): void {
         this.context.beginPath();
-        let [x_new, y_new] = this.matTransform(X, Y);
+        let [x_new, y_new] = this.matTransform(X, Y, Z);
         this.context.moveTo(this.scaleX(x_new), this.scaleY(y_new));
     }
 
@@ -94,9 +86,10 @@
      * Moves a line to the canvas scaled X and Y coordinates
      * @param {number} X - global X coordinate
      * @param {number} Y - global Y coordinate
+     * @param {number} Z - global Z coordinate
      */
-    public lineTo(X: number, Y: number): void {
-        let [x_new, y_new] = this.matTransform(X, Y);
+    public lineTo(X: number, Y: number, Z: number): void {
+        let [x_new, y_new] = this.matTransform(X, Y, Z);
         this.context.lineTo(this.scaleX(x_new), this.scaleY(y_new));
     }
 
@@ -110,8 +103,8 @@
     /**
      * Draws text by calling HTML5 routine strokeText()
      */
-     public strokeText(text: string, X: number, Y: number): void {
-        let [x_new, y_new] = this.matTransform(X, Y);
+     public strokeText(text: string, X: number, Y: number, Z: number): void {
+        let [x_new, y_new] = this.matTransform(X, Y, Z);
         this.context.strokeText(text, this.scaleX(x_new), this.scaleY(y_new));
     }
 
@@ -145,40 +138,40 @@
         const MOVE = 1;
 
         // DRAW X AXIS LINE
-        this.moveTo(this.xmin, 0);
-        this.lineTo(this.xmax, 0);
+        this.moveTo(this.xmin, 0, 0);
+        this.lineTo(this.xmax, 0, 0);
         this.stroke();
         // DRAW X AXIS POINTS AND NUMBERS
         for (let X = this.xmin; X < this.xmax; X += MOVE) {
-            this.moveTo(X,0-0.05);
-            this.lineTo(X,0+0.05);
+            this.moveTo(X,0-0.05, 0);
+            this.lineTo(X,0+0.05, 0);
             this.stroke();
             /*this.context.moveTo(this.scaleX(X), this.PX/2 - 5);
             this.context.lineTo(this.scaleX(X), this.PX/2 + 5);*/
             /*this.moveTo(X, this.PX - 0.5);
             this.lineTo(X, this.PX + 0.5);*/
             this.stroke();
-            if (X != 0) this.strokeText(X.toString(),X,-0.3);
+            if (X != 0) this.strokeText(X.toString(),X,-0.3, 0);
         }
 
         // DRAW Y AXIS LINE
-        this.moveTo(0, this.ymin);
-        this.lineTo(0, this.ymax);
+        this.moveTo(0, this.ymin, 0);
+        this.lineTo(0, this.ymax, 0);
         this.stroke();
         // DRAW Y AXIS POINTS AND NUMBERS
         for (let Y = this.ymin; Y < this.ymax; Y += MOVE) {
-            this.moveTo(0-0.05,Y);
-            this.lineTo(0+0.05,Y);
+            this.moveTo(0-0.05,Y, 0);
+            this.lineTo(0+0.05,Y, 0);
             this.stroke();
-            if (Y != 0) this.strokeText(Y.toString(),0.2,Y);
+            if (Y != 0) this.strokeText(Y.toString(),0.2,Y, 0);
         }
     }
 
     /**
-     * Update GKS transformation matrix
-     * @param m MT2D matrix object
+     * Update Ortho transformation matrix
+     * @param m MT3D matrix object
      */
-    public trans(m: MT2D) {
+    public trans(m: MT3D) {
         this.matrix = m.matrix;
     }
 }

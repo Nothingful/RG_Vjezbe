@@ -64,15 +64,6 @@
     }
 
     /**
-     * Apply transormation matrix for rotation
-     * @param angle rotation angle (in radians)
-     */
-    public rotate(angle: number): void {
-        let m = [[Math.cos(angle),-Math.sin(angle),0],[Math.sin(angle),Math.cos(angle),0],[0,0,1]];
-        this.mult(m);
-    }
-
-    /**
      * Apply transormation matrix for rotation around X axis
      * @param angle rotation angle (in radians)
      */
