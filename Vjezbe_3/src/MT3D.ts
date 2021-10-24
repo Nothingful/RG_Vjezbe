@@ -27,11 +27,11 @@
 
     /** Set identity matrix */
     public setIdentityMatrix(): void {
-        this.matrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
+        this.matrix = MT3D.getIdentityMatrix();
     }
 
     /**
-     * Multiplies current MT"D matrix with input matrix
+     * Multiplies current MT3D matrix with input matrix
      * @param m input matrix
      */
     public mult(m: number[][]) {

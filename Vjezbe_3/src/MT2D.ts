@@ -27,7 +27,7 @@ class MT2D {
 
     /** Set identity matrix */
     public setIdentityMatrix(): void {
-        this.matrix = [[1,0,0],[0,1,0],[0,0,1]];
+        this.matrix = MT2D.getIdentityMatrix();
     }
 
     /**
