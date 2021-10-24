@@ -14,7 +14,7 @@ function zadaca_3_1(): void{
     var gks = new Ortho(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
     gks.trans(mat);
 
-    gks.drawCoordinateSystem();
+    //gks.drawCoordinateSystem();
 
     function cube(a: number) {
         let half = a/2;
@@ -56,7 +56,7 @@ function zadaca_3_1(): void{
         // Draw cube
         gks.strokeStyle("Black");
         mat.setIdentityMatrix();
-        mat.translate(1,1,0);
+        mat.translate(1,1,1);
         mat.rotateAroundAxis(2,-5,2,-3,5,-3,MT3D.toRad(alpha));
         gks.trans(mat);
         cube(2);
@@ -68,14 +68,6 @@ function zadaca_3_1(): void{
 
     gks.strokeStyle("red");
     rotating_cube();
-
-    // Draw cube
-    /*gks.strokeStyle("Black");
-    mat.setIdentityMatrix();
-    mat.translate(1,1,0);
-    mat.rotateAroundAxis(2,-5,2,-3,5,-3,MT3D.toRad(alpha));
-    gks.trans(mat);
-    cube(2);*/
 }
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -16,6 +16,11 @@
         return [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
     }
 
+    /**
+     * Converts degrees to radians
+     * @param degrees value expressed in degrees
+     * @returns value expressed in radians
+     */
     public static toRad(degrees: number): number {
         return degrees * Math.PI / 180;
     }
