@@ -143,13 +143,8 @@
         this.stroke();
         // DRAW X AXIS POINTS AND NUMBERS
         for (let X = this.xmin; X < this.xmax; X += MOVE) {
-            this.moveTo(X,0-0.05, 0);
-            this.lineTo(X,0+0.05, 0);
-            this.stroke();
-            /*this.context.moveTo(this.scaleX(X), this.PX/2 - 5);
-            this.context.lineTo(this.scaleX(X), this.PX/2 + 5);*/
-            /*this.moveTo(X, this.PX - 0.5);
-            this.lineTo(X, this.PX + 0.5);*/
+            this.moveTo(X,0-0.1, 0);
+            this.lineTo(X,0+0.1, 0);
             this.stroke();
             if (X != 0) this.strokeText(X.toString(),X,-0.3, 0);
         }
@@ -160,8 +155,8 @@
         this.stroke();
         // DRAW Y AXIS POINTS AND NUMBERS
         for (let Y = this.ymin; Y < this.ymax; Y += MOVE) {
-            this.moveTo(0-0.05,Y, 0);
-            this.lineTo(0+0.05,Y, 0);
+            this.moveTo(0-0.1,Y, 0);
+            this.lineTo(0+0.1,Y, 0);
             this.stroke();
             if (Y != 0) this.strokeText(Y.toString(),0.2,Y, 0);
         }

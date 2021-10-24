@@ -1,4 +1,4 @@
-function vjezba_3_2(): void{
+function vjezba_3_3(): void{
     var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
 
     if (!canvas){
@@ -29,7 +29,6 @@ function vjezba_3_2(): void{
 
     function cube(a: number) {
         let half = a/2;
-        console.log(half);
         gks.moveTo(half,-half,-half);
         gks.lineTo(half,half,-half);
         gks.lineTo(-half,half,-half);
@@ -52,32 +51,29 @@ function vjezba_3_2(): void{
         gks.stroke();
     }
 
+    const STEP = 0.6;
+    var alpha = 0;
+    function rotating_cube() {
+        gks.clearCanvas();
+        mat.setIdentityMatrix();
+        gks.trans(mat);
+
+        mat.setIdentityMatrix();
+        mat.rotateAroundX(MT3D.toRad(alpha));
+        mat.rotateAroundY(MT3D.toRad(alpha));
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        cube(8);
+
+        alpha += STEP;
+        if (alpha >= 360) alpha = 0;
+        requestAnimationFrame(rotating_cube);
+    }
+
     gks.strokeStyle("red");
-    mat.rotateAroundX(MT3D.toRad(30));
-    gks.trans(mat);
-    cube(8);
-
-    mat.setIdentityMatrix();
-    gks.strokeStyle("green");
-    mat.rotateAroundY(MT3D.toRad(30));
-    gks.trans(mat);
-    cube(8);
-
-    mat.setIdentityMatrix();
-    gks.strokeStyle("blue");
-    mat.rotateAroundZ(MT3D.toRad(30));
-    gks.trans(mat);
-    cube(8);
-
-    mat.setIdentityMatrix();
-    gks.strokeStyle("black");
-    mat.rotateAroundX(MT3D.toRad(30));
-    mat.rotateAroundY(MT3D.toRad(30));
-    mat.rotateAroundZ(MT3D.toRad(30));
-    gks.trans(mat);
-    cube(8);
+    rotating_cube();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    vjezba_3_2();
+    vjezba_3_3();
 });
