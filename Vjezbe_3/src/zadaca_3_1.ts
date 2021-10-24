@@ -40,7 +40,7 @@ function zadaca_3_1(): void{
         gks.stroke();
     }
 
-    const STEP = 0.01;
+    const STEP = 0.5;
     var alpha = 0;
     function rotating_cube() {
         gks.clearCanvas();
