@@ -1,4 +1,4 @@
-function zadaca_2_2(): void{
+function zadaca_3_2(): void{
   var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
 
   if (!canvas){
@@ -148,5 +148,5 @@ function zadaca_2_2(): void{
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  zadaca_2_2();
+  zadaca_3_2();
 });

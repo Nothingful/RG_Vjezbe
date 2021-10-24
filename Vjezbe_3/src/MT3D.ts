@@ -90,6 +90,31 @@
         this.mult(m);
     }
 
+    /**
+     * Apply transormation matrix for rotation around a given axis
+     * @param x0 Vertex X coordinate
+     * @param y0 Vertex Y coordinate
+     * @param z0 Vertex X coordinate
+     * @param u1 Vector X component (Or X coordinate of second vertex)
+     * @param u2 Vector Y component (Or Y coordinate of second vertex)
+     * @param u3 Vector Z component (Or Z coordinate of second vertex)
+     * @param angle rotation angle (in radians)
+     */
+    public rotateAroundAxis(x0: number, y0: number, z0: number, u1: number, u2: number, u3: number, angle: number): void {
+        let a = (u1 - x0) / (Math.sqrt(((u1 - x0)*(u1 - x0)) + ((u2 - y0)*(u2 - y0)) + ((u3 - z0)*(u3 - z0))))
+        let b = (u2 - y0) / (Math.sqrt(((u1 - x0)*(u1 - x0)) + ((u2 - y0)*(u2 - y0)) + ((u3 - z0)*(u3 - z0))))
+        let c = (u3 - z0) / (Math.sqrt(((u1 - x0)*(u1 - x0)) + ((u2 - y0)*(u2 - y0)) + ((u3 - z0)*(u3 - z0))))
+        let d = Math.sqrt((b*b) + (c*c));
+
+        this.translate(-x0, -y0, -z0);
+        this.rotateAroundX(Math.asin(b/d));
+        this.rotateAroundY(-Math.asin(a));
+        this.rotateAroundZ(angle);
+        this.rotateAroundY(Math.asin(a));
+        this.rotateAroundX(-Math.asin(b/d));
+        this.translate(x0, y0, z0);
+    }
+
 
     /** Apply transformation matrix that mirrors the vectors for X axis */
     public mirrorForX(): void {
