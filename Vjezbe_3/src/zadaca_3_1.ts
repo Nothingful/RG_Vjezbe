@@ -16,6 +16,22 @@ function zadaca_3_1(): void{
 
     //gks.drawCoordinateSystem();
 
+    /**
+     * Pravac između tocaka T1(x1,y1,z1) i T2(x2,y2,z2)
+     */
+    function line(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number){
+        gks.moveTo(X_MIN, ((y2 - y1)/(x2 - x1)*(X_MIN - x1)) + y1, ((z2 - z1)/(x2 - x1)*(X_MIN - x1)) + z1);
+        for (let x = X_MIN; x < X_MAX; x++) {
+            let y = ((y2 - y1)/(x2 - x1)*(x - x1)) + y1;
+            let z = ((z2 - z1)/(x2 - x1)*(x - x1)) + z1;
+            gks.lineTo(x, y, z);
+        }
+        gks.stroke();
+    }
+
+    /**
+     * Draw cube with sides length of a
+     */
     function cube(a: number) {
         let half = a/2;
         gks.moveTo(half,-half,-half);
@@ -48,10 +64,12 @@ function zadaca_3_1(): void{
         gks.trans(mat);
         
         // Draw axis
-        gks.strokeStyle("Red");
+        /*gks.strokeStyle("Red");
         gks.moveTo(2,-5,2);
         gks.lineTo(-3,5,-3);
-        gks.stroke();
+        gks.stroke();*/
+        gks.strokeStyle("Red");
+        line(2,-5,2,-3,5,-3);
         
         // Draw cube
         gks.strokeStyle("Black");
