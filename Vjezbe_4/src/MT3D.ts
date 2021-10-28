@@ -209,7 +209,7 @@
         this.camera = [[u[0],u[1],u[2],(-u[0]*x0)-(u[1]*y0)-(u[2]*z0)],
                        [v[0],v[1],v[2],(-v[0]*x0)-(v[1]*y0)-(v[2]*z0)],
                        [n[0],n[1],n[2],(-n[0]*x0)-(n[1]*y0)-(n[2]*z0)],
-                       [0,0,0,1]];
+                       [   0,   0,   0,                             1]];
     }
 
     /**
@@ -229,7 +229,7 @@
     /**
      * Calculates vector length
      * @param v input vector
-     * @returns vetor length
+     * @returns {number} vetor length
      */
     public static VL(v: number[]): number {
         return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
