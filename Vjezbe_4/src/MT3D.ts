@@ -2,10 +2,14 @@
  * Class for 3D matrix manipulation
  */
  class MT3D {
+
+    /**
+     * 3x3 matrix, holds MT3D transformation data
+     */
     public matrix: number[][];
 
     /**
-     * Holds KSK transformation data
+     * 3x3 matrix, holds KSK transformation data
      */
     public camera: number[][];
 
@@ -40,7 +44,7 @@
      * Multiplies current MT3D matrix with input matrix
      * @param m input matrix
      */
-    public mult(m: number[][]): void {
+    private mult(m: number[][]): void {
         let m1 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
         for (let i=0; i<4; i++){
             for (let j=0; j<4; j++){
@@ -54,11 +58,11 @@
 
     /**
      * Multiplies two matrices
-     * @param m1 first matrix
-     * @param m2 second matrix
+     * @param m1 first 4x4 matrix
+     * @param m2 second 4x4 matrix
      * @returns {number[][]} new matrix
      */
-     public static multiplyMatrices(m1: number[][], m2: number[][]): number[][] {
+    public static multiplyMatrices(m1: number[][], m2: number[][]): number[][] {
         let rez = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
         for (let i=0; i<4; i++){
             for (let j=0; j<4; j++){
@@ -196,42 +200,61 @@
     public setCamera(x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, Vx: number, Vy: number, Vz: number): void {
         let N = [x0-x1, y0-y1, z0-z1];
         let N_len = MT3D.VL(N);
-        let n = [N[0]/N_len, N[1]/N_len, N[2]/N_len];
-
+        let n = MT3D.VN(N, N_len);
+        
         let V = [Vx,Vy,Vz];
-
+        
+        console.log(V);
+        console.log(n);
         let U = MT3D.VP(V, n);
+        console.log(U);
         let U_len = MT3D.VL(U);
-        let u = [U[0]/U_len, U[1]/U_len, U[2]/U_len];
+        console.log(U_len);
+        let u = MT3D.VN(U, U_len);
+        console.log(u);
 
         let v = MT3D.VP(n, u);
 
+        console.log(u);
+        console.log(v);
+        console.log(n);
         this.camera = [[u[0],u[1],u[2],(-u[0]*x0)-(u[1]*y0)-(u[2]*z0)],
                        [v[0],v[1],v[2],(-v[0]*x0)-(v[1]*y0)-(v[2]*z0)],
                        [n[0],n[1],n[2],(-n[0]*x0)-(n[1]*y0)-(n[2]*z0)],
                        [   0,   0,   0,                             1]];
+        //console.log(this.camera);
     }
 
     /**
      * Calculates vector product
-     * @param u first vector
-     * @param v second vector
-     * @returns {number[]} vector product
+     * @param u first 3x1 vector
+     * @param v second 3x1 vector
+     * @returns {number[]} vector 3x1 product
      */
     public static VP(u: number[], v: number[]): number[]{
         let vek = [0,0,0];
-        vek[0] = u[1]*v[2] - u[2]*v[1];
-        vek[1] = u[2]*v[0] - u[0]*v[2];
-        vek[2] = u[0]*v[1] - u[1]*v[0];
+        vek[0] = (u[1]*v[2]) - (u[2]*v[1]);
+        vek[1] = (u[2]*v[0]) - (u[0]*v[2]);
+        vek[2] = (u[0]*v[1]) - (u[1]*v[0]);
         return vek;
     }
 
     /**
      * Calculates vector length
-     * @param v input vector
+     * @param v input 3x1 vector
      * @returns {number} vetor length
      */
     public static VL(v: number[]): number {
         return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+    }
+
+    /**
+     * Calculates normalised vector
+     * @param V input 3x1 vector
+     * @param V_len input vector length
+     * @returns {number[]} normalised 3x1 vector
+     */
+     public static VN(V: number[], V_len: number): number[] {
+        return [V[0]/V_len, V[1]/V_len, V[2]/V_len];
     }
 }

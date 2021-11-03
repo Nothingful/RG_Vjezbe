@@ -11,7 +11,8 @@ function zadaca_4_1(): void{
     const Y_MAX = 8;
 
     var mat = new MT3D();
-    var gks = new Ortho(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
+    //mat.setCamera(1,1,1,2,3,4,1,1,1);
+    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 1);
     gks.trans(mat);
 
     //gks.drawCoordinateSystem();
@@ -64,10 +65,6 @@ function zadaca_4_1(): void{
         gks.trans(mat);
         
         // Draw axis
-        /*gks.strokeStyle("Red");
-        gks.moveTo(2,-5,2);
-        gks.lineTo(-3,5,-3);
-        gks.stroke();*/
         gks.strokeStyle("Red");
         line(2,-5,2,-3,5,-3);
         
@@ -84,8 +81,24 @@ function zadaca_4_1(): void{
         requestAnimationFrame(rotating_cube);
     }
 
-    gks.strokeStyle("red");
-    rotating_cube();
+    function big_F(){
+        gks.clearCanvas();
+        mat.setIdentityMatrix();
+        gks.trans(mat);
+
+        // Draw cubes
+        gks.strokeStyle("Black");
+        mat.setIdentityMatrix();
+        mat.rotateAroundY(MT3D.toRad(20));
+        mat.rotateAroundX(MT3D.toRad(20));
+        //mat.translate(1,1,1);
+        gks.trans(mat);
+        cube(2);
+    }
+
+    //gks.strokeStyle("red");
+    //rotating_cube();
+    big_F();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
