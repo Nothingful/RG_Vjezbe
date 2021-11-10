@@ -5,65 +5,53 @@ function vjezba_5_3(): void{
         alert("No canvas found!");
     }
 
-    const X_MIN = -9;
-    const X_MAX = 10;
-    const Y_MIN = -9;
-    const Y_MAX = 10;
+    const X_MIN = -100;
+    const X_MAX = 100;
+    const Y_MIN = -100;
+    const Y_MAX = 100;
 
     var mat = new MT3D();
-    var gks = new Ortho(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX);
+    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 100);
+    mat.setCamera(6,6,4, 2,2,4, 1,1,2);
     gks.trans(mat);
 
     //gks.drawCoordinateSystem();
 
-    function elipsis(a: number, b: number) {
-        const MOVE = 0.01;
-        gks.moveTo(a * Math.cos(0), b * Math.sin(0), 1);
-        for (let t = 0; t < 2*Math.PI; t += MOVE) {
-            let X = a * Math.cos(t);
-            let Y = b * Math.sin(t);
-            gks.lineTo(X,Y,1);
+    /**
+     * Pravac između tocaka T1(x1,y1,z1) i T2(x2,y2,z2)
+     */
+    function line(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number){
+        gks.moveTo(X_MIN, ((y2 - y1)/(x2 - x1)*(X_MIN - x1)) + y1, ((z2 - z1)/(x2 - x1)*(X_MIN - x1)) + z1);
+        for (let x = X_MIN; x < X_MAX; x++) {
+            let y = ((y2 - y1)/(x2 - x1)*(x - x1)) + y1;
+            let z = ((z2 - z1)/(x2 - x1)*(x - x1)) + z1;
+            gks.lineTo(x, y, z);
         }
         gks.stroke();
     }
 
-    function cube(a: number) {
-        let half = a/2;
-        gks.moveTo(half,-half,-half);
-        gks.lineTo(half,half,-half);
-        gks.lineTo(-half,half,-half);
-        gks.lineTo(-half,-half,-half);
-        gks.lineTo(half,-half,-half);
-        gks.lineTo(half,-half,half);
-        gks.lineTo(half,half,half);
-        gks.lineTo(-half,half,half);
-        gks.lineTo(-half,-half,half);
-        gks.lineTo(half,-half,half);
-        gks.stroke();
-        gks.moveTo(half,half,half);
-        gks.lineTo(half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,half,half);
-        gks.lineTo(-half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,-half,half);
-        gks.lineTo(-half,-half,-half);
-        gks.stroke();
-    }
-
-    const STEP = 0.6;
+    const STEP = 0.5;
     var alpha = 0;
     function rotating_cube() {
         gks.clearCanvas();
         mat.setIdentityMatrix();
         gks.trans(mat);
-
+        
+        // Draw axis
+        /*gks.strokeStyle("Red");
+        gks.moveTo(2,-5,2);
+        gks.lineTo(-3,5,-3);
+        gks.stroke();*/
+        gks.strokeStyle("Red");
+        line(2,-5,2,-3,5,-3);
+        
+        // Draw cube
+        gks.strokeStyle("Black");
         mat.setIdentityMatrix();
-        mat.rotateAroundX(MT3D.toRad(alpha));
-        mat.rotateAroundY(MT3D.toRad(alpha));
-        mat.rotateAroundZ(MT3D.toRad(alpha));
+        mat.translate(1,1,1);
+        mat.rotateAroundAxis(2,-5,2,-3,5,-3,MT3D.toRad(alpha));
         gks.trans(mat);
-        cube(8);
+        gks.cube(2);
 
         alpha += STEP;
         if (alpha >= 360) alpha = 0;
@@ -71,7 +59,12 @@ function vjezba_5_3(): void{
     }
 
     gks.strokeStyle("red");
-    rotating_cube();
+    gks.draw_grid(5);
+    gks.strokeStyle("black");
+    //gks.cube(2);
+    //gks.cone(4, 8, 12);
+    //gks.cylinder(3, 6, 16);
+    gks.half_sphere(4, 12, 12);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

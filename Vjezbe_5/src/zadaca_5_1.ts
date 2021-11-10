@@ -5,14 +5,14 @@ function zadaca_5_1(): void{
         alert("No canvas found!");
     }
 
-    const X_MIN = -7;
-    const X_MAX = 8;
-    const Y_MIN = -7;
-    const Y_MAX = 8;
+    const X_MIN = -100;
+    const X_MAX = 100;
+    const Y_MIN = -100;
+    const Y_MAX = 100;
 
     var mat = new MT3D();
-    //mat.setCamera(1,1,1,2,3,4,1,1,1);
-    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 1);
+    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 100);
+    //mat.setCamera(3, 7, 4, 1, 1, 4, 0, 0, 1);
     gks.trans(mat);
 
     //gks.drawCoordinateSystem();
@@ -30,75 +30,167 @@ function zadaca_5_1(): void{
         gks.stroke();
     }
 
-    /**
-     * Draw cube with sides length of a
-     */
-    function cube(a: number) {
-        let half = a/2;
-        gks.moveTo(half,-half,-half);
-        gks.lineTo(half,half,-half);
-        gks.lineTo(-half,half,-half);
-        gks.lineTo(-half,-half,-half);
-        gks.lineTo(half,-half,-half);
-        gks.lineTo(half,-half,half);
-        gks.lineTo(half,half,half);
-        gks.lineTo(-half,half,half);
-        gks.lineTo(-half,-half,half);
-        gks.lineTo(half,-half,half);
-        gks.stroke();
-        gks.moveTo(half,half,half);
-        gks.lineTo(half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,half,half);
-        gks.lineTo(-half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,-half,half);
-        gks.lineTo(-half,-half,-half);
-        gks.stroke();
-    }
-
     const STEP = 0.5;
     var alpha = 0;
-    function rotating_cube() {
-        gks.clearCanvas();
-        mat.setIdentityMatrix();
-        gks.trans(mat);
-        
-        // Draw axis
-        gks.strokeStyle("Red");
-        line(2,-5,2,-3,5,-3);
-        
-        // Draw cube
-        gks.strokeStyle("Black");
-        mat.setIdentityMatrix();
-        mat.translate(1,1,1);
-        mat.rotateAroundAxis(2,-5,2,-3,5,-3,MT3D.toRad(alpha));
-        gks.trans(mat);
-        cube(2);
 
-        alpha += STEP;
-        if (alpha >= 360) alpha = 0;
-        requestAnimationFrame(rotating_cube);
-    }
-
+    var min_z = 5;
+    var max_z = 10;
+    var set_z = 7;
+    var gore = true;
     function big_F(){
         gks.clearCanvas();
         mat.setIdentityMatrix();
         gks.trans(mat);
-
-        // Draw cubes
-        gks.strokeStyle("Black");
-        mat.setIdentityMatrix();
-        mat.rotateAroundY(MT3D.toRad(20));
-        mat.rotateAroundX(MT3D.toRad(20));
-        //mat.translate(1,1,1);
+        gks.strokeStyle("black");
+        
+        // Set Camera
+        mat.setCamera(6,6,set_z, 2,2,4, 1,1,2);
         gks.trans(mat);
-        cube(2);
+        
+        // Draw Grid
+        mat.setIdentityMatrix();
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.strokeStyle("red");
+        gks.draw_grid(5);
+
+        // Draw Big F
+        gks.strokeStyle("black");
+        let a = 1;
+        mat.setIdentityMatrix();
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(0, a, 4*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(0, 2*a, 4*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(0, a, 2*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.cube(a);
+
+        alpha += STEP;
+        if (alpha >= 360) alpha = 0;
+        if( gore == true){
+            set_z = set_z + 0.01;
+            if(set_z > max_z){
+                gore = false;
+            }
+        }else {
+            set_z = set_z - 0.01;
+            if(set_z < min_z){
+                gore = true;
+            }
+        }
+        requestAnimationFrame(big_F);
     }
 
-    //gks.strokeStyle("red");
-    //rotating_cube();
-    big_F();
+    function turbine() {
+        gks.clearCanvas();
+        mat.setIdentityMatrix();
+        gks.trans(mat);
+        gks.strokeStyle("black");
+        
+        // Set Camera
+        mat.setCamera(8,8,10, 2,2,4, 1,1,2);
+        gks.trans(mat);
+        
+        // Draw Grid
+        mat.setIdentityMatrix();
+        //mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.strokeStyle("red");
+        gks.draw_grid(10);
+
+        // Draw turbine
+        gks.strokeStyle("black");
+        mat.setIdentityMatrix();
+        //mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.cone(5, 8, 16);
+
+        mat.setIdentityMatrix();
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        mat.translate(0, 0, 6.5);
+        gks.trans(mat);
+        gks.cylinder(1, 2, 10);
+
+        mat.setIdentityMatrix();
+        mat.rotateAroundY(MT3D.toRad(90));
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        mat.translate(0, 0, 7.5);
+        gks.trans(mat);
+        gks.cylinder(0.3, 5, 10);
+
+        mat.setIdentityMatrix();
+        mat.rotateAroundY(MT3D.toRad(90));
+        mat.rotateAroundZ(MT3D.toRad(alpha+120));
+        mat.translate(0, 0, 7.5);
+        gks.trans(mat);
+        gks.cylinder(0.3, 5, 10);
+
+        mat.setIdentityMatrix();
+        mat.rotateAroundY(MT3D.toRad(90));
+        mat.rotateAroundZ(MT3D.toRad(alpha+240));
+        mat.translate(0, 0, 7.5);
+        gks.trans(mat);
+        gks.cylinder(0.3, 5, 10);
+
+        mat.setIdentityMatrix();
+        //mat.rotateAroundX(MT3D.toRad(90));
+        mat.translate(6, -0.2, 7.5);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.half_sphere(1, 12, 12);
+
+        mat.setIdentityMatrix();
+        //mat.rotateAroundX(MT3D.toRad(90));
+        mat.translate(6, -0.2, 7.5);
+        mat.rotateAroundZ(MT3D.toRad(alpha+120));
+        gks.trans(mat);
+        gks.half_sphere(1, 12, 12);
+
+        mat.setIdentityMatrix();
+        //mat.rotateAroundX(MT3D.toRad(90));
+        mat.translate(6, -0.2, 7.5);
+        mat.rotateAroundZ(MT3D.toRad(alpha+240));
+        gks.trans(mat);
+        gks.half_sphere(1, 12, 12);
+
+        alpha += STEP;
+        if (alpha >= 360) alpha = 0;
+        requestAnimationFrame(turbine);
+    }
+
+    //big_F();
+    turbine();
 }
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -74,16 +74,11 @@
         let x_new = this.matrix[0][0]*X + this.matrix[0][1]*Y + this.matrix[0][2]*Z + this.matrix[0][3];
         let y_new = this.matrix[1][0]*X + this.matrix[1][1]*Y + this.matrix[1][2]*Z + this.matrix[1][3];
         let z_new = this.matrix[2][0]*X + this.matrix[2][1]*Y + this.matrix[2][2]*Z + this.matrix[2][3];
-        //z_new = 0.5;
-        //console.log("X:"+x_new);
-        //console.log("Y:"+y_new);
-        //console.log("Z:"+z_new);
-        let x_final = -1 * this.distance / z_new * x_new;
-        let y_final = -1 * this.distance / z_new * y_new;
-        //console.log("X':"+x_final);
-        //console.log("Y':"+y_final);
+
+        let x_final = -(this.distance / z_new) * x_new;
+        let y_final = -(this.distance / z_new) * y_new;
+
         return [x_final, y_final];
-        //return [x_new, y_new];
     }
 
     /**
@@ -185,5 +180,135 @@
     public trans(m: MT3D) {
         //this.matrix = m.matrix;
         this.matrix = MT3D.multiplyMatrices(m.camera, m.matrix);
+    }
+
+    /**
+     * Draw grid
+     * @param size scale
+     */
+    public draw_grid(a: number) {
+        for(let x=-a; x<=a; x=x+a/10){
+            this.moveTo(a , x, 0);
+            this.lineTo(-a, x, 0);
+            this.stroke();
+        }
+        for(let y=-a; y<=a; y=y+a/10){
+            this.moveTo(y, a, 0);
+            this.lineTo(y, -a, 0);
+            this.stroke();
+        }
+    }
+
+     /**
+     * Draw cube with sides length of a
+     */
+    public cube(a: number) {
+        this.moveTo(a, 0, 0);
+        this.lineTo(a, a, 0);
+        this.lineTo(0, a, 0);
+        this.lineTo(0, 0, 0);
+        this.lineTo(a, 0, 0);
+        this.lineTo(a, 0, a);
+        this.lineTo(a, a, a);
+        this.lineTo(0, a, a);
+        this.lineTo(0, 0, a);
+        this.lineTo(a, 0, a);
+        this.stroke();
+        this.moveTo(a, a, a);
+        this.lineTo(a, a, 0);
+        this.stroke();
+        this.moveTo(0, a, a);
+        this.lineTo(0, a, 0);
+        this.stroke();
+        this.moveTo(0, 0, a);
+        this.lineTo(0, 0, 0);
+        this.stroke();
+    }
+
+    /**
+     * Draw cone
+     * @param r base radius
+     * @param h height
+     * @param n number of segments
+     */
+    public cone(r: number, h: number, n:number) {
+        let phi = 0;
+        this.moveTo(r*Math.cos(phi), r*Math.sin(phi), 0);
+        for (let phi = 0; phi < 2*Math.PI+1; phi+=2*Math.PI/(n+1)) {
+            this.lineTo(r*Math.cos(phi), r*Math.sin(phi), 0);
+            this.lineTo(0,0,h);
+            this.stroke();
+            this.moveTo(r*Math.cos(phi), r*Math.sin(phi), 0);
+        }
+        this.stroke();
+    }
+
+    /**
+     * Draw cylinder
+     * @param r base radius
+     * @param h height
+     * @param n number of segments
+     */
+    public cylinder(r: number, h: number, n:number) {
+        this.moveTo(r*Math.cos(0), r*Math.sin(0), 0);
+        for (let phi = 0; phi < 2*Math.PI+1; phi+=2*Math.PI/(n+1)) {
+            this.lineTo(r*Math.cos(phi), r*Math.sin(phi), 0);
+            this.lineTo(r*Math.cos(phi), r*Math.sin(phi), h);
+            this.stroke();
+            this.moveTo(r*Math.cos(phi), r*Math.sin(phi), 0);
+        }
+        this.moveTo(r*Math.cos(0), r*Math.sin(0), h);
+        for (let phi = 0; phi < 2*Math.PI+1; phi+=2*Math.PI/(n+1)) {
+            this.lineTo(r*Math.cos(phi), r*Math.sin(phi), h);
+            this.stroke();
+        }
+    }
+
+    /**
+     * Draw sphere
+     * @param r sphere radius
+     * @param m number of meridians
+     * @param n number of parallels
+     */
+    public sphere(r: number, m: number, n:number){
+        for (let phi = 0; phi < 2*Math.PI; phi+=2*Math.PI/m) {
+            this.moveTo(r*Math.cos(phi)*Math.sin(0), r*Math.sin(phi)*Math.sin(0), r*Math.cos(0));
+            for (let theta = 0; theta < Math.PI+1; theta+=0.1){
+                this.lineTo(r*Math.cos(phi)*Math.sin(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(theta));
+                this.stroke();
+            }
+        }
+        for (let theta = 0; theta < Math.PI; theta+=Math.PI/(n+1)) {
+            this.moveTo(r*Math.cos(0)*Math.sin(theta), r*Math.sin(0)*Math.sin(theta), r*Math.cos(theta));
+            for (let phi = 0; phi < 2*Math.PI+1; phi+=0.1){
+                this.lineTo(r*Math.cos(phi)*Math.sin(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(theta));
+                this.stroke();
+            }
+        }
+        this.stroke();
+    }
+
+    /**
+     * Draw a half-sphere
+     * @param r sphere radius
+     * @param m number of meridians
+     * @param n number of parallels
+     */
+     public half_sphere(r: number, m: number, n:number){
+        for (let phi = 0; phi < Math.PI; phi+=2*Math.PI/m) {
+            this.moveTo(r*Math.cos(phi)*Math.sin(0), r*Math.sin(phi)*Math.sin(0), r*Math.cos(0));
+            for (let theta = 0; theta < Math.PI; theta+=0.1){
+                this.lineTo(r*Math.cos(phi)*Math.sin(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(theta));
+                this.stroke();
+            }
+        }
+        for (let theta = 0; theta < Math.PI; theta+=Math.PI/(n+1)) {
+            this.moveTo(r*Math.cos(0)*Math.sin(theta), r*Math.sin(0)*Math.sin(theta), r*Math.cos(theta));
+            for (let phi = 0; phi < Math.PI; phi+=0.1){
+                this.lineTo(r*Math.cos(phi)*Math.sin(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(theta));
+                this.stroke();
+            }
+        }
+        this.stroke();
     }
 }

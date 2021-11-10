@@ -11,8 +11,8 @@ function vjezba_5_1(): void{
     const Y_MAX = 100;
 
     var mat = new MT3D();
-    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 50);
-    mat.setCamera(3, 7, 4, 1, 1, 4, 0, 0, 1);
+    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 100);
+    mat.setCamera(6,6,4, 2,2,4, 1,1,2);
     gks.trans(mat);
 
     //gks.drawCoordinateSystem();
@@ -27,33 +27,6 @@ function vjezba_5_1(): void{
             let z = ((z2 - z1)/(x2 - x1)*(x - x1)) + z1;
             gks.lineTo(x, y, z);
         }
-        gks.stroke();
-    }
-
-    /**
-     * Draw cube with sides length of a
-     */
-    function cube(a: number) {
-        let half = a/2;
-        gks.moveTo(half,-half,-half);
-        gks.lineTo(half,half,-half);
-        gks.lineTo(-half,half,-half);
-        gks.lineTo(-half,-half,-half);
-        gks.lineTo(half,-half,-half);
-        gks.lineTo(half,-half,half);
-        gks.lineTo(half,half,half);
-        gks.lineTo(-half,half,half);
-        gks.lineTo(-half,-half,half);
-        gks.lineTo(half,-half,half);
-        gks.stroke();
-        gks.moveTo(half,half,half);
-        gks.lineTo(half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,half,half);
-        gks.lineTo(-half,half,-half);
-        gks.stroke();
-        gks.moveTo(-half,-half,half);
-        gks.lineTo(-half,-half,-half);
         gks.stroke();
     }
 
@@ -78,15 +51,15 @@ function vjezba_5_1(): void{
         mat.translate(1,1,1);
         mat.rotateAroundAxis(2,-5,2,-3,5,-3,MT3D.toRad(alpha));
         gks.trans(mat);
-        cube(2);
+        gks.cube(2);
 
         alpha += STEP;
         if (alpha >= 360) alpha = 0;
         requestAnimationFrame(rotating_cube);
     }
 
-    gks.strokeStyle("red");
-    rotating_cube();
+    //gks.cube(2);
+    gks.cone(4, 8, 12);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
