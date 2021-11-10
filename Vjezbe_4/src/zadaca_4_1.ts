@@ -56,6 +56,19 @@ function zadaca_4_1(): void{
         gks.stroke();
     }
 
+    function draw_grid() {
+        for(let x=-5; x<=5; x=x+0.5){
+            gks.moveTo(5 , x, 0);
+            gks.lineTo(-5, x, 0);
+            gks.stroke();
+        }
+        for(let y=-5; y<=5; y=y+0.5){
+            gks.moveTo(y, 5, 0);
+            gks.lineTo(y, -5, 0);
+            gks.stroke();
+        }
+    }
+
     const STEP = 0.5;
     var alpha = 0;
     function rotating_cube() {
@@ -80,55 +93,85 @@ function zadaca_4_1(): void{
         requestAnimationFrame(rotating_cube);
     }
 
+    var min_z = 5;
+    var max_z = 10;
+    var set_z = 7;
+    var gore = true;
     function big_F(){
         gks.clearCanvas();
         mat.setIdentityMatrix();
         gks.trans(mat);
-
-        // Draw cubes
-        /*gks.strokeStyle("Black");
-        mat.setIdentityMatrix();
-        mat.rotateAroundY(MT3D.toRad(20));
-        mat.rotateAroundX(MT3D.toRad(20));
-        //mat.translate(1,1,1);
-        gks.trans(mat);
-        cube(2);*/
-        let a = 1;
-        gks.trans(mat);
-        cube(a);
-
-        mat.translate(0, a, 0);
-        gks.trans(mat);
-        cube(a);
-
-        mat.translate(0, a, 0);
-        gks.trans(mat);
-        cube(a);
-
-        mat.translate(0, a, 0);
-        gks.trans(mat);
-        cube(a);
-
-        mat.translate(0, a, 0);
-        gks.trans(mat);
-        cube(a);
-
-        mat.translate(a, 0, 0);
-        gks.trans(mat);
-        cube(a);
+        gks.strokeStyle("black");
         
-        mat.translate(a, 0, 0);
+        // Set Camera
+        mat.setCamera(6,6,set_z, 2,2,4, 1,1,2);
+        gks.trans(mat);
+        
+        // Draw Grid
+        mat.setIdentityMatrix();
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        gks.strokeStyle("red");
+        draw_grid();
+
+        // Draw Big F
+        gks.strokeStyle("black");
+        let a = 1;
+        mat.setIdentityMatrix();
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, 0, a);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, 0, a);
         gks.trans(mat);
         cube(a);
 
         mat.setIdentityMatrix();
-        mat.translate(a, 2 * a, 0);
+        mat.translate(0, a, 4*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
         gks.trans(mat);
         cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(0, 2*a, 4*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(0, a, 2*a);
+        mat.rotateAroundZ(MT3D.toRad(alpha));
+        gks.trans(mat);
+        cube(a);
+
+        alpha += STEP;
+        if (alpha >= 360) alpha = 0;
+        if( gore == true){
+            set_z = set_z + 0.01;
+            if(set_z > max_z){
+                gore = false;
+            }
+        }else {
+            set_z = set_z - 0.01;
+            if(set_z < min_z){
+                gore = true;
+            }
+        }
+        requestAnimationFrame(big_F);
     }
 
-    //gks.strokeStyle("red");
-    //rotating_cube();
     big_F();
 }
 
