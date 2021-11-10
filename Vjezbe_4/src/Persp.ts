@@ -74,16 +74,11 @@
         let x_new = this.matrix[0][0]*X + this.matrix[0][1]*Y + this.matrix[0][2]*Z + this.matrix[0][3];
         let y_new = this.matrix[1][0]*X + this.matrix[1][1]*Y + this.matrix[1][2]*Z + this.matrix[1][3];
         let z_new = this.matrix[2][0]*X + this.matrix[2][1]*Y + this.matrix[2][2]*Z + this.matrix[2][3];
-        //z_new = 0.5;
-        //console.log("X:"+x_new);
-        //console.log("Y:"+y_new);
-        //console.log("Z:"+z_new);
-        let x_final = -1 * this.distance / z_new * x_new;
-        let y_final = -1 * this.distance / z_new * y_new;
-        //console.log("X':"+x_final);
-        //console.log("Y':"+y_final);
+
+        let x_final = -(this.distance / z_new) * x_new;
+        let y_final = -(this.distance / z_new) * y_new;
+
         return [x_final, y_final];
-        //return [x_new, y_new];
     }
 
     /**

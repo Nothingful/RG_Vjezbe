@@ -5,14 +5,14 @@ function zadaca_4_1(): void{
         alert("No canvas found!");
     }
 
-    const X_MIN = -7;
-    const X_MAX = 8;
-    const Y_MIN = -7;
-    const Y_MAX = 8;
+    const X_MIN = -100;
+    const X_MAX = 100;
+    const Y_MIN = -100;
+    const Y_MAX = 100;
 
     var mat = new MT3D();
-    //mat.setCamera(1,1,1,2,3,4,1,1,1);
-    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 1);
+    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 80);
+    mat.setCamera(3, 7, 4, 1, 1, 4, 0, 0, 1);
     gks.trans(mat);
 
     //gks.drawCoordinateSystem();
@@ -34,26 +34,25 @@ function zadaca_4_1(): void{
      * Draw cube with sides length of a
      */
     function cube(a: number) {
-        let half = a/2;
-        gks.moveTo(half,-half,-half);
-        gks.lineTo(half,half,-half);
-        gks.lineTo(-half,half,-half);
-        gks.lineTo(-half,-half,-half);
-        gks.lineTo(half,-half,-half);
-        gks.lineTo(half,-half,half);
-        gks.lineTo(half,half,half);
-        gks.lineTo(-half,half,half);
-        gks.lineTo(-half,-half,half);
-        gks.lineTo(half,-half,half);
+        gks.moveTo(a, 0, 0);
+        gks.lineTo(a, a, 0);
+        gks.lineTo(0, a, 0);
+        gks.lineTo(0, 0, 0);
+        gks.lineTo(a, 0, 0);
+        gks.lineTo(a, 0, a);
+        gks.lineTo(a, a, a);
+        gks.lineTo(0, a, a);
+        gks.lineTo(0, 0, a);
+        gks.lineTo(a, 0, a);
         gks.stroke();
-        gks.moveTo(half,half,half);
-        gks.lineTo(half,half,-half);
+        gks.moveTo(a, a, a);
+        gks.lineTo(a, a, 0);
         gks.stroke();
-        gks.moveTo(-half,half,half);
-        gks.lineTo(-half,half,-half);
+        gks.moveTo(0, a, a);
+        gks.lineTo(0, a, 0);
         gks.stroke();
-        gks.moveTo(-half,-half,half);
-        gks.lineTo(-half,-half,-half);
+        gks.moveTo(0, 0, a);
+        gks.lineTo(0, 0, 0);
         gks.stroke();
     }
 
@@ -87,13 +86,45 @@ function zadaca_4_1(): void{
         gks.trans(mat);
 
         // Draw cubes
-        gks.strokeStyle("Black");
+        /*gks.strokeStyle("Black");
         mat.setIdentityMatrix();
         mat.rotateAroundY(MT3D.toRad(20));
         mat.rotateAroundX(MT3D.toRad(20));
         //mat.translate(1,1,1);
         gks.trans(mat);
-        cube(2);
+        cube(2);*/
+        let a = 1;
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, a, 0);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, a, 0);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, a, 0);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(0, a, 0);
+        gks.trans(mat);
+        cube(a);
+
+        mat.translate(a, 0, 0);
+        gks.trans(mat);
+        cube(a);
+        
+        mat.translate(a, 0, 0);
+        gks.trans(mat);
+        cube(a);
+
+        mat.setIdentityMatrix();
+        mat.translate(a, 2 * a, 0);
+        gks.trans(mat);
+        cube(a);
     }
 
     //gks.strokeStyle("red");
