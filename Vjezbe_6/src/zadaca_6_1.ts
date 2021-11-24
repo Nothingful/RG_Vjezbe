@@ -1,198 +1,106 @@
-function zadaca_6_1(): void{
+window.onload = zadaca_6_2;
+
+function zadaca_6_2() {
     var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
+    var gl: WebGL2RenderingContext = canvas.getContext("webgl2");
+    if (!gl) alert("WebGL2 nije dostupan!");
 
-    if (!canvas){
-        alert("No canvas found!");
-    }
+    var GPUprogram1: WebGLProgram = prepareGPUprogram(gl, "vertex-shader", "fragment-shader");
+    gl.useProgram(GPUprogram1); // možemo imati više GPU programa
 
-    const X_MIN = -100;
-    const X_MAX = 100;
-    const Y_MIN = -100;
-    const Y_MAX = 100;
-
-    var mat = new MT3D();
-    var gks = new Persp(canvas, X_MIN, X_MAX, Y_MIN, Y_MAX, 100);
-    //mat.setCamera(3, 7, 4, 1, 1, 4, 0, 0, 1);
-    gks.trans(mat);
-
-    //gks.drawCoordinateSystem();
+    // povezivanje s uniform varijablama u programima za sjenčanje
+    let u_mTrans = gl.getUniformLocation(GPUprogram1, "u_mTrans");
+    let u_boja = gl.getUniformLocation(GPUprogram1, "u_boja");
 
     /**
-     * Pravac između tocaka T1(x1,y1,z1) i T2(x2,y2,z2)
+     * Cretes array of vertices for drawing elipsis
+     * @returns array of elipsis vertices
      */
-    function line(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number){
-        gks.moveTo(X_MIN, ((y2 - y1)/(x2 - x1)*(X_MIN - x1)) + y1, ((z2 - z1)/(x2 - x1)*(X_MIN - x1)) + z1);
-        for (let x = X_MIN; x < X_MAX; x++) {
-            let y = ((y2 - y1)/(x2 - x1)*(x - x1)) + y1;
-            let z = ((z2 - z1)/(x2 - x1)*(x - x1)) + z1;
-            gks.lineTo(x, y, z);
+    function generateElipsisVertices(a: number, b: number) {
+        var vertices: number[] = [];
+        for (var i = 0; i < 2 * Math.PI; i += 0.01){
+            let x = Math.cos(i) * a;
+            let y = Math.sin(i) * b;
+            vertices.push(x);
+            vertices.push(y);
         }
-        gks.stroke();
+        return vertices;
     }
 
-    const STEP = 0.5;
-    var alpha = 0;
+    // definiranje geometrije preko javascript polja
+    var a = 0.4;
+    var b = 0.1;
+    var circleVertices = generateElipsisVertices(b/1.25, b/1.25);
+    var elipsisiVertices = generateElipsisVertices(a, b);
 
-    var min_z = 5;
-    var max_z = 10;
-    var set_z = 7;
-    var gore = true;
-    function big_F(){
-        gks.clearCanvas();
-        mat.setIdentityMatrix();
-        gks.trans(mat);
-        gks.strokeStyle("black");
+    function fillBuffers(vertices: number[]) {
+        var vertexBuffer: WebGLBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+        // povezivanje s atribut varijablom a_vrhXY u programu za sjenčanje
+        let a_vrhXY = gl.getAttribLocation(GPUprogram1, "a_vrhXY");
+        gl.enableVertexAttribArray(a_vrhXY);
+        gl.vertexAttribPointer(a_vrhXY, 2, gl.FLOAT, false, 0, 0);
+        // punjenje spremnika - podaci koji se šalju na GPU
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    }
+
+    /*function draw(vertices: number[]) {
+        gl.clearColor(0.4, 0.4, 0.4, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+
+        // postavljanje vrijednosti uniform varijabli
+        let angle = Math.PI / 3.0;
+        gl.uniformMatrix3fv(u_mTrans, false, [Math.cos(angle), Math.sin(angle), 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 1]);
+        gl.uniform4fv(u_boja, [0.0, 1.0, 0.0, 1.0]); // zelena boja
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
+
+        let trans_x = 0.9;
+        let trans_y = 0.3;
         
-        // Set Camera
-        mat.setCamera(6,6,set_z, 2,2,4, 1,1,2);
-        gks.trans(mat);
+        gl.uniformMatrix3fv(u_mTrans, false, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, trans_x, trans_y, 1.0]);
+        gl.uniform4fv(u_boja, [1.0, 1.0, 0.0, 1.0]); // žuta boja
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
+
+        gl.uniformMatrix3fv(u_mTrans, false, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -trans_x, -trans_y, 1.0]);
+        gl.uniform4fv(u_boja, [1.0, 0.0, 0.0, 1.0]); // crvena boja
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
+    }*/
+
+    function drawCircle(vertices: number[]){
+        gl.clearColor(0.4, 0.4, 0.4, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.viewport(0, 0, canvas.width, canvas.height);
         
-        // Draw Grid
-        mat.setIdentityMatrix();
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.strokeStyle("red");
-        gks.draw_grid(5);
+        // postavljanje vrijednosti uniform varijabli
+        gl.uniformMatrix3fv(u_mTrans, false, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]); // jedinična matrica
+        gl.uniform4fv(u_boja, [0.5, 0.0, 0.5, 0.5]); // zelena boja
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
+    }
 
-        // Draw Big F
-        gks.strokeStyle("black");
-        let a = 1;
-        mat.setIdentityMatrix();
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.cube(a);
+    function drawElipsis(vertices: number[]){
+        gl.viewport(0, 0, canvas.width, canvas.height);
 
-        mat.translate(0, 0, a);
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.translate(0, 0, a);
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.translate(0, 0, a);
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.translate(0, 0, a);
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.setIdentityMatrix();
-        mat.translate(0, a, 4*a);
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.setIdentityMatrix();
-        mat.translate(0, 2*a, 4*a);
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.cube(a);
-
-        mat.setIdentityMatrix();
-        mat.translate(0, a, 2*a);
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.cube(a);
-
-        alpha += STEP;
-        if (alpha >= 360) alpha = 0;
-        if( gore == true){
-            set_z = set_z + 0.01;
-            if(set_z > max_z){
-                gore = false;
-            }
-        }else {
-            set_z = set_z - 0.01;
-            if(set_z < min_z){
-                gore = true;
-            }
+        function draw(px: number, py: number, k: number) {
+            let angle = Math.PI / k;
+            gl.uniformMatrix3fv(u_mTrans, false, [Math.cos(angle), Math.sin(angle), 0.0, -Math.sin(angle), Math.cos(angle), 0.0, px, py, 1.0]);
+            gl.uniform4fv(u_boja, [1.0, 1.0, 0.0, 1.0]); // žuta boja
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
         }
-        requestAnimationFrame(big_F);
+
+        draw(0.0, 0.5, 2);
+        draw(0.0, -0.5, 2);
+        draw(0.5, 0.0, 1);
+        draw(-0.5, 0.0, 1);
+        draw(0.33, 0.38, 3.5);
+        draw(0.33, -0.38, -3.5);
+        draw(-0.33, -0.38, 3.5);
+        draw(-0.33, 0.38, -3.5);
     }
 
-    function turbine() {
-        gks.clearCanvas();
-        mat.setIdentityMatrix();
-        gks.trans(mat);
-        gks.strokeStyle("black");
-        
-        // Set Camera
-        mat.setCamera(8,8,10, 2,2,4, 1,1,2);
-        gks.trans(mat);
-        
-        // Draw Grid
-        mat.setIdentityMatrix();
-        //mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.strokeStyle("red");
-        gks.draw_grid(10);
-
-        // Draw turbine
-        gks.strokeStyle("black");
-        mat.setIdentityMatrix();
-        //mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.cone(5, 8, 16);
-
-        mat.setIdentityMatrix();
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        mat.translate(0, 0, 6.5);
-        gks.trans(mat);
-        gks.cylinder(1, 2, 10);
-
-        mat.setIdentityMatrix();
-        mat.rotateAroundY(MT3D.toRad(90));
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        mat.translate(0, 0, 7.5);
-        gks.trans(mat);
-        gks.cylinder(0.3, 5, 10);
-
-        mat.setIdentityMatrix();
-        mat.rotateAroundY(MT3D.toRad(90));
-        mat.rotateAroundZ(MT3D.toRad(alpha+120));
-        mat.translate(0, 0, 7.5);
-        gks.trans(mat);
-        gks.cylinder(0.3, 5, 10);
-
-        mat.setIdentityMatrix();
-        mat.rotateAroundY(MT3D.toRad(90));
-        mat.rotateAroundZ(MT3D.toRad(alpha+240));
-        mat.translate(0, 0, 7.5);
-        gks.trans(mat);
-        gks.cylinder(0.3, 5, 10);
-
-        mat.setIdentityMatrix();
-        //mat.rotateAroundX(MT3D.toRad(90));
-        mat.translate(6, -0.2, 7.5);
-        mat.rotateAroundZ(MT3D.toRad(alpha));
-        gks.trans(mat);
-        gks.half_sphere(1, 12, 12);
-
-        mat.setIdentityMatrix();
-        //mat.rotateAroundX(MT3D.toRad(90));
-        mat.translate(6, -0.2, 7.5);
-        mat.rotateAroundZ(MT3D.toRad(alpha+120));
-        gks.trans(mat);
-        gks.half_sphere(1, 12, 12);
-
-        mat.setIdentityMatrix();
-        //mat.rotateAroundX(MT3D.toRad(90));
-        mat.translate(6, -0.2, 7.5);
-        mat.rotateAroundZ(MT3D.toRad(alpha+240));
-        gks.trans(mat);
-        gks.half_sphere(1, 12, 12);
-
-        alpha += STEP;
-        if (alpha >= 360) alpha = 0;
-        requestAnimationFrame(turbine);
-    }
-
-    //big_F();
-    turbine();
+    fillBuffers(circleVertices);
+    drawCircle(circleVertices);
+    fillBuffers(elipsisiVertices);
+    drawElipsis(elipsisiVertices);
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    zadaca_6_1();
-});
