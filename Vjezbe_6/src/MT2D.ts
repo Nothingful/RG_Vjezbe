@@ -4,8 +4,17 @@
 class MT2D {
     public matrix: number[][];
 
+    public sx: number;
+    public sy: number;
+    public tx: number;
+    public ty: number;
+
     constructor() {
         this.setIdentityMatrix();
+        this.sx = 1;
+        this.sy = 1;
+        this.tx = 1;
+        this.ty = 1;
     }
 
     /**
@@ -122,8 +131,8 @@ class MT2D {
      * Transform MT2D matrix into 1D array for use with gl uniformMatrix3fv function
      * @returns List containing matrix members
      */
-    public list(): number[] {
-        var list: number[] = [];
+    public list() {
+        var list = [];
         for (var i = 0; i < 3; i++) {
             for (var j = 0; j < 3; j++) {
                 list.push(this.matrix[j][i]);
@@ -140,11 +149,18 @@ class MT2D {
      * @param ymax 
      */
     public projection2D(xmin: number, xmax: number, ymin: number, ymax: number) {
-        let sx = 2 / (xmax - xmin);
-        let sy = 2 / (ymax - ymin);
-        let tx = (xmin + xmax) / (xmin - xmax);
-        let ty = (ymin + ymax) / (ymin - ymax);
+        this.sx = 2 / (xmax - xmin);
+        this.sy = 2 / (ymax - ymin);
+        this.tx = (xmin + xmax) / (xmin - xmax);
+        this.ty = (ymin + ymax) / (ymin - ymax);
 
-        this.mult([[sx, 0, tx], [0, sy, ty], [0, 0, 1]]);
+        //this.mult([[sx, 0, tx], [0, sy, ty], [0, 0, 1]]);
+    }
+
+    public transX(x: number){
+        return this.sx * x + this.tx;
+    }
+    public transY(y: number){
+        return this.sy * y + this.ty;
     }
 }
