@@ -6,6 +6,7 @@
     <title>RG Vjezbe 7</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='./dist/MT3D.js'></script>
     <script src='./dist/RG-WebGL.js'></script>
     <script src='./dist/vjezba_2.js'></script>
     <script id="vertex-shader" type="x-shader/x-vertex">
@@ -13,9 +14,10 @@
         in vec2 a_vrhXY;
         in vec3 a_boja;
         out vec3 v_boja;
+        uniform mat4 u_mTrans;
 
         void main() {
-            gl_Position = vec4(a_vrhXY, 0, 1);
+            gl_Position = vec4(u_mTrans * vec4(a_vrhXY, 0, 1));
             v_boja = a_boja;
         }
     </script>
@@ -23,10 +25,12 @@
         #version 300 es
         precision highp float;
         in vec3 v_boja;
+        uniform vec4 u_boja;
         out vec4 bojaPiksela;
 
         void main() {
             bojaPiksela = vec4(v_boja, 1);
+            //bojaPiksela = u_boja;
         }
     </script>
 </head>

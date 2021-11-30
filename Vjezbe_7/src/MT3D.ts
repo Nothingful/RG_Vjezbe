@@ -249,4 +249,34 @@
      public static VN(V: number[], V_len: number): number[] {
         return [V[0]/V_len, V[1]/V_len, V[2]/V_len];
     }
+
+    /**
+     * Transform MT3D matrix into 1D array for use with gl uniformMatrix4fv function
+     * @returns List containing matrix members
+     */
+     public list() {
+        var list = [];
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                list.push(this.matrix[j][i]);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Maps the coordinates from the given range to the normalized coordinates between -1 and 1 
+     * @param xmin 
+     * @param xmax 
+     * @param ymin 
+     * @param ymax 
+     */
+    public projection2D(xmin: number, xmax: number, ymin: number, ymax: number) {
+        let sx = 2 / (xmax - xmin);
+        let sy = 2 / (ymax - ymin);
+        let tx = (xmin + xmax) / (xmin - xmax);
+        let ty = (ymin + ymax) / (ymin - ymax);
+
+        this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+    }
 }

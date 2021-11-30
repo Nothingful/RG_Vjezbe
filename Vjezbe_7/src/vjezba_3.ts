@@ -13,51 +13,86 @@ function vjezba_7_3() {
     let u_boja = gl.getUniformLocation(GPUprogram1, "u_boja");
 
     // definiranje geometrije preko javascript polja
-    var vertices = [];
-    var a = 0.9;
-    var b = 0.3;
-    for (var i = 0; i < 2 * Math.PI; i += 0.01){
-        let x = Math.cos(i) * a;
-        let y = Math.sin(i) * b;
-        vertices.push(x);
-        vertices.push(y);
-    }
+    let a = 0.5;
+    /*var vertices = [[ 0,  0,  1, 0, 0],  // crveno
+                    [-a, -a,  1, 0, 0],  // crveno
+                    [ a, -a,  1, 0, 0],  // crveno
+                    [ 0,  0,  1, 0, 0],  // crveno
+                    [ a,  a,  1, 1, 0],  // žuto
+                    [-a,  a,  0.5, 0, 1]]; // ljubičasto*/
 
-    function fillBuffers() {
+    var vertices1 = [[ 0,  0,  1, 1, 0],  // žuto
+                    [-a, -a,  1, 0, 0],  // crveno
+                    [ a, -a,  1, 0, 0],  // crveno
+                    [ 0,  0,  1, 1, 0],  // žuto
+                    [ a,  a,  1, 0, 0],  // crveno
+                    [-a,  a,  1, 0, 0]]; // crveno
+
+    var vertices2 = [[ 0,  0,  0.5, 0, 1],  // ljubičasto
+                    [-a, -a,  1, 1, 0],  // žuto
+                    [ a, -a,  1, 1, 0],  // žuto
+                    [ 0,  0,  0.5, 0, 1],  // ljubičasto
+                    [ a,  a,  1, 1, 0],  // žuto
+                    [-a,  a,  1, 1, 0]]; // žuto
+
+    function fillBuffers(vertices: number[][]) {
         var vertexBuffer: WebGLBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-        // povezivanje s atribut varijablom a_vrhXY u programu za sjenčanje
+        // povezivanje s atribut varijablama u programu za sjenčanje
         let a_vrhXY = gl.getAttribLocation(GPUprogram1, "a_vrhXY");
-        gl.enableVertexAttribArray(a_vrhXY);
-        gl.vertexAttribPointer(a_vrhXY, 2, gl.FLOAT, false, 0, 0);
-        // punjenje spremnika - podaci koji se šalju na GPU
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    }
-
-    function draw() {
-        gl.clearColor(0.4, 0.4, 0.4, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.viewport(0, 0, canvas.width, canvas.height);
-
-        // postavljanje vrijednosti uniform varijabli
-        let angle = Math.PI / 3.0;
-        gl.uniformMatrix3fv(u_mTrans, false, [Math.cos(angle), Math.sin(angle), 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 1]);
-        gl.uniform4fv(u_boja, [0.0, 1.0, 0.0, 1.0]); // zelena boja
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
-
-        let trans_x = 0.9;
-        let trans_y = 0.3;
+        let a_boja = gl.getAttribLocation(GPUprogram1, "a_boja");
         
-        gl.uniformMatrix3fv(u_mTrans, false, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, trans_x, trans_y, 1.0]);
-        gl.uniform4fv(u_boja, [1.0, 1.0, 0.0, 1.0]); // žuta boja
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
-
-        gl.uniformMatrix3fv(u_mTrans, false, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -trans_x, -trans_y, 1.0]);
-        gl.uniform4fv(u_boja, [1.0, 0.0, 0.0, 1.0]); // crvena boja
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, vertices.length / 2);
+        var vertexBuffer: WebGLBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.enableVertexAttribArray(a_vrhXY);
+        gl.enableVertexAttribArray(a_boja);
+        gl.vertexAttribPointer(a_vrhXY, 2, gl.FLOAT, false, 20, 0);
+        gl.vertexAttribPointer(a_boja, 3, gl.FLOAT, false, 20, 8);
+        // punjenje spremnika - podaci koji se šalju na GPU
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices.flat()), gl.STATIC_DRAW);
     }
 
-    fillBuffers();
+    var mt3D = new MT3D();
+    var green_color = [0.0, 1.0, 0.0, 1.0]; // zelena boja
+    var red_color = [0.8, 0.0, 0.2, 1.0]; // crvena boja
+    var blue_color = [0.1, 0.54, 0.98, 1.0]; // plava boja
+    var STEP = 1;
+    function draw() {
+        gl.clearColor(0.5, 0.5, 0.5, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        
+        let radians = MT3D.toRad(STEP);
+        mt3D.setIdentityMatrix();
+        mt3D.rotateAroundY(radians);
+        mt3D.rotateAroundX(radians*2);
+        mt3D.rotateAroundZ(radians*3);
+        
+        gl.uniformMatrix4fv(u_mTrans, false, mt3D.list());
+        //console.log(mt3D.list());
+        gl.uniform4fv(u_boja, red_color);
+        fillBuffers(vertices1);
+        gl.drawArrays(gl.TRIANGLES, 0, vertices1.length);
+
+        mt3D.setIdentityMatrix();
+        mt3D.rotateAroundX(MT3D.toRad(90));
+        mt3D.rotateAroundY(radians);
+        mt3D.rotateAroundX(radians*2);
+        mt3D.rotateAroundZ(radians*3);
+        
+        gl.uniformMatrix4fv(u_mTrans, false, mt3D.list());
+        //console.log(mt3D.list());
+        gl.uniform4fv(u_boja, red_color);
+        fillBuffers(vertices2);
+        gl.drawArrays(gl.TRIANGLES, 0, vertices2.length);
+        
+        if (STEP < 360) STEP += 0.2;
+        else STEP = 0;
+        requestAnimationFrame(draw);
+    }
+    gl.enable(gl.DEPTH_TEST);
+    //gl.enable(gl.CULL_FACE);
+    //gl.cullFace(gl.FRONT);
     draw();
 }
