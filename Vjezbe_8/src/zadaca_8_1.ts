@@ -1,6 +1,6 @@
-window.onload = zadaca_7_1;
+window.onload = zadaca_8_1;
 
-function zadaca_7_1() {
+function zadaca_8_1() {
     var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
     var gl: WebGL2RenderingContext = canvas.getContext("webgl2");
     if (!gl) alert("WebGL2 nije dostupan!");
