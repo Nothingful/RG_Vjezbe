@@ -265,7 +265,7 @@
     }
 
     /**
-     * Maps the coordinates from the given range to the normalized coordinates between -1 and 1 
+     * Maps the coordinates from the given XY range to the normalized coordinates between -1 and 1 
      * @param xmin 
      * @param xmax 
      * @param ymin 
@@ -278,5 +278,47 @@
         let ty = (ymin + ymax) / (ymin - ymax);
 
         this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+    }
+
+    /**
+     * Maps the coordinates from the given XYZ range to the normalized coordinates between -1 and 1
+     * for orthogonal projection
+     * @param xmin 
+     * @param xmax 
+     * @param ymin 
+     * @param ymax 
+     * @param zpr
+     * @param zst
+     */
+     public orto(xmin: number, xmax: number, ymin: number, ymax: number, zpr: number, zst: number) {
+        let sx = 2 / (xmax - xmin);
+        let sy = 2 / (ymax - ymin);
+        let sz = 2 / (zpr - zst);
+        let tx = (xmin + xmax) / (xmin - xmax);
+        let ty = (ymin + ymax) / (ymin - ymax);
+        let tz = (zpr + zst) / (zpr - zst);
+
+        this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, sz, tz], [0, 0, 0, 1]]);
+    }
+
+    /**
+     * Maps the coordinates from the given XYZ range to the normalized coordinates between -1 and 1
+     * for perspective projection
+     * @param xmin 
+     * @param xmax 
+     * @param ymin 
+     * @param ymax 
+     * @param zpr
+     * @param zst
+     */
+     public persp(xmin: number, xmax: number, ymin: number, ymax: number, zpr: number, zst: number) {
+        let sx = 2 * zpr / (xmax - xmin);
+        let sy = 2 * zpr / (ymax - ymin);
+        let sz = 2 * zpr * zst / (zpr - zst);
+        let tx = (xmin + xmax) / (xmin - xmax);
+        let ty = (ymin + ymax) / (ymin - ymax);
+        let tz = (zpr + zst) / (zpr - zst);
+
+        this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, tz, -1], [0, 0, sz, 0]]);
     }
 }

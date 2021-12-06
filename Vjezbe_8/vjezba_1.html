@@ -10,12 +10,12 @@
     <script src='./dist/vjezba_1.js'></script>
     <script id="vertex-shader" type="x-shader/x-vertex">
         #version 300 es
-        in vec2 a_vrhXY;
+        in vec3 a_vrhXYZ;
         in vec3 a_boja;
         out vec3 v_boja;
 
         void main() {
-            gl_Position = vec4(a_vrhXY, 0, 1);
+            gl_Position = vec4(a_vrhXYZ, 1);
             v_boja = a_boja;
         }
     </script>

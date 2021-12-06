@@ -13,46 +13,61 @@ function vjezba_8_1() {
     let u_boja = gl.getUniformLocation(GPUprogram1, "u_boja");
 
     // definiranje geometrije preko javascript polja
-    var vertices = [[ -1, -0.5,  0.5, 0, 1],  // ljubičasto
-                    [-1, 0.5,  0.5, 0, 1],  // ljubičasto
-                    [ -0.67, -0.5,  0, 0, 1],  // plavo
-                    [ -0.67, 0.5,  0, 0, 1],  // plavo
-                    [ -0.33, -0.5,  0, 1, 1],  // cijan
-                    [ -0.33, 0.5,  0, 1, 1], // cijan
-                    [ 0.33, -0.5,  0, 1, 0],  // zeleno
-                    [ 0.33, 0.5,  0, 1, 0],  // zeleno
-                    [ 0.67, -0.5,  1, 1, 0],  // žuto
-                    [ 0.67, 0.5,  1, 1, 0],  // žuto
-                    [ 1, -0.5,  1, 0, 0],  // crveno
-                    [ 1, 0.5,  1, 0, 0]];  // crveno
+    let a = 0.5;
+    var vrhoviLeptira =
+      [[ 0,  0,  0, 1, 0, 0],  // crveno
+       [-a, -a,  0, 1, 0, 0],  // crveno
+       [ a, -a,  0, 1, 0, 0],  // crveno
+       [ 0,  0,  0, 1, 0, 0],  // crveno
+       [ a,  a,  0, 1, 1, 0],  // žuto
+       [-a,  a,  0, 0.5, 0, 1]]; // ljubičasto
 
+    let r = 0.9; // raspon koordinatnih osi
+    var vrhoviKoordOsi =
+      [[-r,  0,  0],
+       [ r,  0,  0],
+       [ 0,  r,  0],
+       [ 0, -r,  0]];
+
+    var leptirVAO = gl.createVertexArray();
+    var koordOsiVAO = gl.createVertexArray();
+    
     function fillBuffers() {
-        var vertexBuffer: WebGLBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-
         // povezivanje s atribut varijablama u programu za sjenčanje
-        let a_vrhXY = gl.getAttribLocation(GPUprogram1, "a_vrhXY");
+        let a_vrhXYZ = gl.getAttribLocation(GPUprogram1, "a_vrhXYZ");
         let a_boja = gl.getAttribLocation(GPUprogram1, "a_boja");
-
-        //gl.uniformMatrix3fv(u_mTrans, false, mt2D.list());
-        //gl.uniform4fv(u_boja, red_color);
         
-        var vertexBuffer: WebGLBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        gl.enableVertexAttribArray(a_vrhXY);
+        gl.bindVertexArray(leptirVAO);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.enableVertexAttribArray(a_vrhXYZ);
         gl.enableVertexAttribArray(a_boja);
-        gl.vertexAttribPointer(a_vrhXY, 2, gl.FLOAT, false, 20, 0);
-        gl.vertexAttribPointer(a_boja, 3, gl.FLOAT, false, 20, 8);
+        gl.vertexAttribPointer(a_vrhXYZ, 3, gl.FLOAT, false, 24, 0);
+        gl.vertexAttribPointer(a_boja, 3, gl.FLOAT, false, 24, 12);
+
         // punjenje spremnika - podaci koji se šalju na GPU
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices.flat()), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vrhoviLeptira.flat()), gl.STATIC_DRAW);
+
+        gl.bindVertexArray(koordOsiVAO);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.enableVertexAttribArray(a_vrhXYZ);
+        gl.vertexAttribPointer(a_vrhXYZ, 3, gl.FLOAT, false, 12, 0);
+        // punjenje spremnika - podaci koji se šalju na GPU
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vrhoviKoordOsi.flat()), gl.STATIC_DRAW);
+        gl.vertexAttrib3f(a_boja, 1, 1, 1); // svi vrhovi su bijeli
     }
 
     function draw() {
-        gl.clearColor(0.5, 0.5, 0.5, 1);
+        gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.viewport(0, 0, canvas.width, canvas.height);
 
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length);
+        // poveži sa spremnikom u kojem je leptir
+        gl.bindVertexArray(leptirVAO);          
+        gl.drawArrays(gl.TRIANGLES, 0, vrhoviLeptira.length);
+
+        // poveži sa spremnikom u kojem su osi
+        gl.bindVertexArray(koordOsiVAO);          
+        gl.drawArrays(gl.LINES, 0, vrhoviKoordOsi.length);
     }
 
     fillBuffers();
