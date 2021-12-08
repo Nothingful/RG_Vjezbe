@@ -12,6 +12,12 @@ function zadaca_8_1() {
     let u_mTrans = gl.getUniformLocation(GPUprogram1, "u_mTrans");
     let u_boja = gl.getUniformLocation(GPUprogram1, "u_boja");
 
+    var zuto = [1, 1, 0];
+    var crveno = [1, 0, 0];
+    var ljubicasto = [0.5, 0, 1];
+    var zeleno = [0, 1, 0];
+    var plavo = [0, 0, 1];
+    var tirkizno = [0, 1, 1];
     function cube_page(a: number, color: number[]): number[][] {
         let vertices = [[-a,  a].concat(color),
                         [-a, -a].concat(color),
@@ -39,13 +45,6 @@ function zadaca_8_1() {
         // punjenje spremnika - podaci koji se šalju na GPU
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices.flat()), gl.STATIC_DRAW);
     }
-
-    var zuto = [1, 1, 0];
-    var crveno = [1, 0, 0];
-    var ljubicasto = [0.5, 0, 1];
-    var zeleno = [0, 1, 0];
-    var plavo = [0, 0, 1];
-    var tirkizno = [0, 1, 1];
     
     var mt3D = new MT3D();
     var STEP = 1;

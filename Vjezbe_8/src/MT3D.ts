@@ -298,7 +298,7 @@
         let ty = (ymin + ymax) / (ymin - ymax);
         let tz = (zpr + zst) / (zpr - zst);
 
-        this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, sz, tz], [0, 0, 0, 1]]);
+        this.mult([[sx, 0, 0, tx], [0, sy, 0, ty], [0, 0, sz, tz], [0, 0, 0, 1]]);
     }
 
     /**
@@ -315,8 +315,8 @@
         let sx = 2 * zpr / (xmax - xmin);
         let sy = 2 * zpr / (ymax - ymin);
         let sz = 2 * zpr * zst / (zpr - zst);
-        let tx = (xmin + xmax) / (xmin - xmax);
-        let ty = (ymin + ymax) / (ymin - ymax);
+        let tx = (xmax + xmin) / (xmax - xmin);
+        let ty = (ymax + ymin) / (ymax - ymin);
         let tz = (zpr + zst) / (zpr - zst);
 
         this.mult([[sx, 0, tx, 0], [0, sy, ty, 0], [0, 0, tz, -1], [0, 0, sz, 0]]);
