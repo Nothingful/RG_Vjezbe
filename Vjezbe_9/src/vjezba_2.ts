@@ -1,6 +1,6 @@
-window.onload = zadaca_8_1;
+window.onload = vjezba_9_2;
 
-function zadaca_8_1() {
+function vjezba_9_2() {
     var canvas = document.querySelector<HTMLCanvasElement>("#canvas");
     var gl: WebGL2RenderingContext = canvas.getContext("webgl2");
     if (!gl) alert("WebGL2 nije dostupan!");
@@ -83,6 +83,9 @@ function zadaca_8_1() {
         //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.viewport(0, 0, canvas.width, canvas.height);
         let radians = MT3D.toRad(STEP);
+        /*let r = 10;
+        let x = r * Math.cos(radians);
+        let z = r * Math.sin(radians);*/
 
         // GRID
 
@@ -133,8 +136,7 @@ function zadaca_8_1() {
         // ZELENO
 
         mt3D.setIdentityMatrix();
-        //mt3D.persp(-1, 1, -1, 1, 0.5, 15);
-        //mt3D.setCamera(1, 0.3, 1, 0, 0, 0, 0, 1, 0);
+        //mt3D.persp(-5, 5, -5, 5, -5, 5);
         mt3D.translate(0, 0, -a);
         mt3D.rotateAroundY(radians);
         mt3D.rotateAroundX(radians*2);
@@ -178,7 +180,7 @@ function zadaca_8_1() {
         requestAnimationFrame(draw);
     }
     gl.enable(gl.DEPTH_TEST);
-    //gl.enable(gl.CULL_FACE);
+    gl.enable(gl.CULL_FACE);
     //gl.cullFace(gl.FRONT);
     
     draw();

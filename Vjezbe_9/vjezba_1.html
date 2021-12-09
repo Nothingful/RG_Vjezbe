@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>RG Vjezbe 9</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='./dist/RG-WebGL.js'></script>
+    <script src='./dist/vjezba_1.js'></script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        in vec4 a_vrhXYZ;
+        in vec3 a_normala;
+        uniform mat4 u_mTrans;
+        uniform vec3 izvor1;
+        uniform vec3 izvor2;
+        out float zelena;
+        out float crvena;
+
+        void main() {
+            vec4 vrh = u_mTrans * a_vrhXYZ; // primijeni matricu transformacije
+            vec3 normala = mat3(u_mTrans) * a_normala; // transformacija normale
+
+            // Lambertov zakon
+            vec3 premaIzvoru = normalize(izvor1 - vec3(vrh));
+            zelena = dot(premaIzvoru, normala);
+            premaIzvoru = normalize(izvor2 - vec3(vrh));
+            crvena = dot(premaIzvoru, normala);
+
+            gl_Position = vrh;
+        }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+        precision highp float;
+        out vec4 bojaPiksela;
+        in float zelena;
+        in float crvena;
+
+        void main() {
+            bojaPiksela = vec4(crvena, zelena, 0, 1); // postavlja se boja piksela
+        }
+    </script>
+</head>
+<body>
+    <h1>Vjezbe 9 - Primjer 1</h1>
+    <div class="canvas_wrapper">
+        <canvas id="canvas" style="border:5px solid black" width="500" height="500"></canvas>
+    </div>
+</body>
+</html>

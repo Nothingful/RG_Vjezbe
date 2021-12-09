@@ -83,6 +83,9 @@ function vjezba_8_2() {
         //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.viewport(0, 0, canvas.width, canvas.height);
         let radians = MT3D.toRad(STEP);
+        /*let r = 10;
+        let x = r * Math.cos(radians);
+        let z = r * Math.sin(radians);*/
 
         // GRID
 
@@ -133,6 +136,7 @@ function vjezba_8_2() {
         // ZELENO
 
         mt3D.setIdentityMatrix();
+        //mt3D.persp(-5, 5, -5, 5, -5, 5);
         mt3D.translate(0, 0, -a);
         mt3D.rotateAroundY(radians);
         mt3D.rotateAroundX(radians*2);
